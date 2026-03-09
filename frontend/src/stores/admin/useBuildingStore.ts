@@ -34,7 +34,6 @@ type BuildingState = {
   setFilters: (patch: Partial<BuildingFilters>) => void;
   setTypes: (patch: Record<string, boolean>) => void;
   resetFilters: () => void;
-
   search: () => Promise<void>;
 };
 

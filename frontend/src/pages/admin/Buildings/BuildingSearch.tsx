@@ -19,7 +19,7 @@ export default function BuildingSearch() {
     setTypes,
     search,
     resetFilters,
-    loading,
+    // loading,
     districts,
     staffs,
     rentTypes,
@@ -158,8 +158,8 @@ export default function BuildingSearch() {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={search} disabled={loading}>
-            {loading ? "Đang tìm..." : "Tìm kiếm"}
+          <Button onClick={search}>
+            Tìm kiếm
           </Button>
 
           <Button

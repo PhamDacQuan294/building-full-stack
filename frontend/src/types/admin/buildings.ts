@@ -1,4 +1,4 @@
-export type BuildingStatus = "all" | "active" | "inactive";
+export type BuildingStatus = "all" | "ACTIVE" | "INACTIVE";
 
 export interface BuildingFilters {
   name: string;

@@ -19,7 +19,13 @@ function buildParams(filters: BuildingFilters): QueryParams {
     rentFrom: filters.rentFrom,
     rentTo: filters.rentTo,
     staffId: filters.staffId,
+
     types: selectedTypes.length ? selectedTypes : undefined,
+
+    status: filters.status !== "all" ? filters.status : undefined,
+    sort: filters.sort,
+    page: filters.page,
+    limit: filters.limit,
   };
 
   const params: QueryParams = {};
@@ -48,4 +54,17 @@ export const buildingService = {
     });
     return res.data;
   },
+
+  changeStatus: async (id: string | number, status: string) => {
+    const res = await api.patch(`/buildings/change-status/${id}/${status}`);
+    return res.data;
+  },
+
+  changeMultiStatus: async (ids: Array<string | number>, status: string) => {
+    const res = await api.patch("/buildings/change-multi", {
+      ids,
+      status,
+    })
+    return res.data
+  }
 };

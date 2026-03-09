@@ -41,7 +41,9 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
         if (!fieldName.equals("staffId")
           && !fieldName.equals("types")
           && !fieldName.startsWith("area")
-          && !fieldName.startsWith("rentPrice")) {
+          && !fieldName.startsWith("rentPrice")
+          && !fieldName.equals("sort")
+          && !fieldName.equals("status")) {
 
           Object value = item.get(params);
 
@@ -104,7 +106,42 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
       where.append(sql);
       where.append(") ");
     }
+
+    if (params.getStatus() != null) {
+      where.append(" AND b.status = '").append(params.getStatus().name()).append("' ");
+    }
   }
+
+    public static void querySort(BuildingSearchRequestDTO params, StringBuilder sql) {
+      String sort = params.getSort();
+
+      if (sort == null || sort.trim().isEmpty()) {
+        return;
+      }
+
+      switch (sort) {
+        case "name-asc":
+          sql.append(" ORDER BY b.name ASC ");
+          break;
+        case "name-desc":
+          sql.append(" ORDER BY b.name DESC ");
+          break;
+        case "rent-asc":
+          sql.append(" ORDER BY b.rentprice ASC ");
+          break;
+        case "rent-desc":
+          sql.append(" ORDER BY b.rentprice DESC ");
+          break;
+        case "area-asc":
+          sql.append(" ORDER BY b.floorarea ASC ");
+          break;
+        case "area-desc":
+          sql.append(" ORDER BY b.floorarea DESC ");
+          break;
+        default:
+          break;
+      }
+    }
 
   @Override
   public List<BuildingEntity> findAll(BuildingSearchRequestDTO params) {
@@ -117,6 +154,7 @@ public class BuildingRepositoryImpl implements BuildingRepositoryCustom {
     querySpecial(params, where);
 
     sql.append(where);
+    querySort(params, sql);
 
     Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
     return query.getResultList();

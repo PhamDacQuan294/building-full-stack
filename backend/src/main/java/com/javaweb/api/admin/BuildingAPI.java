@@ -3,6 +3,7 @@ package com.javaweb.api.admin;
 import com.javaweb.enums.District;
 import com.javaweb.enums.RentType;
 import com.javaweb.model.request.building.BuildingSearchRequestDTO;
+import com.javaweb.model.request.common.ChangeMultiStatusRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.building.BuildingListResponseDTO;
 import com.javaweb.model.response.building.BuildingResponseDTO;
@@ -11,10 +12,7 @@ import com.javaweb.service.admin.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,6 +32,8 @@ public class BuildingAPI {
     try {
       List<BuildingResponseDTO> buildings = buildingService.findAll(params);
 
+      System.out.println(params);
+
       BuildingListResponseDTO payload = new BuildingListResponseDTO();
       payload.setBuildings(buildings);
       payload.setStaffs(userService.getStaffs());
@@ -51,6 +51,61 @@ public class BuildingAPI {
       errorResponse.setMessage("Failed");
       errorResponse.setDetail(e.getMessage());
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+  }
+
+  // [PATCH] /api/buildings/change-status/{id}/{status}
+  @PatchMapping("/change-status/{id}/{status}")
+  public ResponseEntity<ResponseDTO<?>> changeStatus(@PathVariable Long id, @PathVariable String status) {
+    try {
+      buildingService.changeStatus(id, status);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("Success");
+      response.setDetail("Update building status successfully");
+      response.setData(null);
+
+      return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+      ResponseDTO<Object> errorResponse = new ResponseDTO<>();
+      errorResponse.setMessage("Failed");
+      errorResponse.setDetail(e.getMessage());
+      errorResponse.setData(null);
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
+    } catch (Exception e) {
+      ResponseDTO<Object> errorResponse = new ResponseDTO<>();
+      errorResponse.setMessage("Failed");
+      errorResponse.setDetail("Internal server error");
+      errorResponse.setData(null);
+
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+  }
+
+  // [PATCH] /api/buildings/change-multi
+  @PatchMapping("/change-multi")
+  public ResponseEntity<ResponseDTO<?>> changeMultiStatus(
+    @RequestBody ChangeMultiStatusRequestDTO request) {
+
+    try {
+
+      buildingService.changeMultiStatus(request);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("Success");
+      response.setDetail("Cập nhật trạng thái nhiều toà nhà thành công");
+      response.setData(null);
+
+      return ResponseEntity.ok(response);
+
+    } catch (Exception e) {
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("Failed");
+      response.setDetail(e.getMessage());
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
     }
   }
 }
