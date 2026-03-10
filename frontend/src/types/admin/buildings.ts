@@ -45,3 +45,8 @@ export interface BuildingResponse {
   detail: string;
   message: string;
 }
+
+export interface AssignBuildingRequest {
+  buildingId: number
+  staffs: number[]
+}

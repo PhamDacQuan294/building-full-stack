@@ -23,11 +23,20 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useState } from "react";
+import { UserCheck } from "lucide-react";
+import AssignBuildingDialog from "@/components/admin/buildings/AssignBuildingDialog";
 
 export default function BuildingTable() {
   const { items, loading, pagination, setFilters, search } = useBuildingStore();
   const [selectedIds, setSelectedIds] = useState<Array<string | number>>([]);
   const [bulkStatus, setBulkStatus] = useState("");
+  const [openAssign, setOpenAssign] = useState(false)
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | number | null>(null)
+
+  const handleOpenAssign = (id: string | number) => {
+    setSelectedBuildingId(id)
+    setOpenAssign(true)
+  }
 
   const goToPage = async (page: number) => {
     setFilters({ page });
@@ -78,7 +87,7 @@ export default function BuildingTable() {
         toast.error("Vui lòng chọn ít nhất một toà nhà!");
         return;
       }
-      
+
       await buildingService.changeMultiStatus(selectedIds, bulkStatus);
 
       toast.success("Cập nhật trạng thái nhiều toà nhà thành công!");
@@ -149,7 +158,7 @@ export default function BuildingTable() {
                   Trạng thái
                 </TableHead>
 
-                <TableHead className="w-[180px] text-center">
+                <TableHead className="w-[350px] text-center">
                   Hành động
                 </TableHead>
               </TableRow>
@@ -253,6 +262,14 @@ export default function BuildingTable() {
                         >
                           Chi tiết
                         </Button>
+                        <Button
+                          variant="outline"
+                          className="gap-2 border-border"
+                          onClick={() => handleOpenAssign(item.id)}
+                        >
+                          <UserCheck className="w-4 h-4" />
+                          Giao toà nhà
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -260,8 +277,9 @@ export default function BuildingTable() {
               )}
             </TableBody>
           </Table>
+        <AssignBuildingDialog open={openAssign} onOpenChange={setOpenAssign} buildingId={selectedBuildingId}/>
         </div>
-
+        
         <div className="flex items-center justify-end gap-2 mt-4">
           <Button
             size="sm"

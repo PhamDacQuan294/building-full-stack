@@ -31,3 +31,24 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Eclipse
+.metadata/
+.project
+.classpath
+.settings/
+
+# Logs
+*.log
+
+# Node
+node_modules/
+
+# Build
+dist/
+build/
+target/
+
+# OS
+.DS_Store
+Thumbs.db

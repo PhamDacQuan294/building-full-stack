@@ -1,7 +1,7 @@
 // src/layouts/LayoutDefault.jsx
-import Header from "@/components/admin/Partials/Header";
-import Sidebar from "@/components/admin/Partials/Sidebar";
-import Footer from "@/components/admin/Partials/Footer";
+import Header from "@/components/admin/partials/Header";
+import Sidebar from "@/components/admin/partials/Sidebar";
+import Footer from "@/components/admin/partials/Footer";
 import { Outlet } from "react-router-dom";
 
 export const LayoutDefault = () => {

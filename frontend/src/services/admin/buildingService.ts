@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { BuildingFilters, BuildingResponse } from "@/types/admin/buildings";
+import type { AssignBuildingRequest, BuildingFilters, BuildingResponse } from "@/types/admin/buildings";
 
 type QueryParams = Record<string, string | number | boolean | string[]>;
 
@@ -66,5 +66,15 @@ export const buildingService = {
       status,
     })
     return res.data
-  }
+  },
+
+  loadStaffs: async (buildingId: string | number) => {
+    const res = await api.get(`/buildings/${buildingId}/staffs`)
+    return res.data
+  },
+
+  assignBuilding: async (payload: AssignBuildingRequest) => {
+    const res = await api.post("/buildings/assignment", payload)
+    return res.data
+  },
 };
