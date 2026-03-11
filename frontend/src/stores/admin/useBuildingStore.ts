@@ -19,7 +19,7 @@ const initialFilters: BuildingFilters = {
   status: "all",
   sort: "rent-desc",
   page: 1,
-  limit: 10,
+  limit: 2,
 };
 
 type BuildingState = {
@@ -43,7 +43,7 @@ export const useBuildingStore = create<BuildingState>((set, get) => ({
   districts: {},
   staffs: {},
   rentTypes: {},
-  pagination: { page: 1, totalPage: 1 },
+  pagination: { page: 1, totalPage: 1, totalItems: 0, },
   loading: false,
 
   setFilters: (patch) => {
@@ -80,13 +80,20 @@ export const useBuildingStore = create<BuildingState>((set, get) => ({
 
       const { filters } = get()
       const res = await buildingService.search(filters)
+      
+      const totalItems = res.totalItem || 0;
+      const totalPage = Math.ceil(totalItems / filters.limit);
 
       set({
         items: res.data.buildings || [],
         districts: res.data.districts || {},
         staffs: res.data.staffs || {},
         rentTypes: res.data.rentTypes || {},
-        pagination: { page: filters.page, totalPage: 1 },
+        pagination: {
+          page: filters.page,
+          totalPage: totalPage > 0 ? totalPage : 1,
+          totalItems,
+        },
       })
     } catch (error) {
       console.error(error)

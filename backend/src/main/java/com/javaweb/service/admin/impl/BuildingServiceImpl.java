@@ -20,6 +20,7 @@ import com.javaweb.repository.admin.custom.BuildingRepositoryCustom;
 import com.javaweb.service.admin.BuildingService;
 import com.javaweb.service.admin.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,16 +48,23 @@ public class BuildingServiceImpl implements BuildingService {
   @Autowired
   private UploadService uploadService;
 
-	@Override
-	public List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params) {
-		List<BuildingEntity> buildingEntities = buildingRepositoryCustom.findAll(params);
-		List<BuildingResponseDTO> result = new ArrayList<>();
-		for (BuildingEntity item : buildingEntities) {
-			BuildingResponseDTO buildingResponseDTO = buildingDTOConverter.toBuildingResponseDTO(item);
-			result.add(buildingResponseDTO);
-		}
-		return result;
-	}
+  @Override
+  public List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params, Pageable pageable) {
+    List<BuildingEntity> buildingEntities = buildingRepositoryCustom.findAll(params, pageable);
+    List<BuildingResponseDTO> result = new ArrayList<>();
+
+    for (BuildingEntity item : buildingEntities) {
+      BuildingResponseDTO buildingResponseDTO = buildingDTOConverter.toBuildingResponseDTO(item);
+      result.add(buildingResponseDTO);
+    }
+
+    return result;
+  }
+
+  @Override
+  public int countTotalItem(BuildingSearchRequestDTO params) {
+    return buildingRepositoryCustom.countTotalItem(params);
+  }
 
 	@Override
 	public void changeStatus(Long id, String status) {

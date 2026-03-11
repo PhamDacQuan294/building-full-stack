@@ -27,7 +27,7 @@ export interface BuildingItem {
   rentPrice?: number;
   status?: string;
   imageUrl?: string;
-  // image?: string;
+  image?: string;
 }
 
 export type IdNameMap = Record<string, string>;
@@ -46,6 +46,7 @@ export interface BuildingResponse {
   data: BuildingResponseData;
   detail: string;
   message: string;
+  totalItem: number;
 }
 
 export interface AssignBuildingRequest {

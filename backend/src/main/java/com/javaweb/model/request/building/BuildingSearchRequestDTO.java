@@ -26,4 +26,7 @@ public class BuildingSearchRequestDTO {
   private List<String> types;
   private CommonStatus status;
   private String sort;
+
+  private int page = 1;
+  private int limit = 10;
 }

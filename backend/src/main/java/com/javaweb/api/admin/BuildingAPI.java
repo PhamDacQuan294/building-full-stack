@@ -14,6 +14,8 @@ import com.javaweb.service.admin.BuildingService;
 import com.javaweb.service.admin.IUserService;
 import com.javaweb.service.admin.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,32 +39,40 @@ public class BuildingAPI {
   private UploadService uploadService;
 
 	// [GET] /api/buildings
-	@GetMapping("")
-	public ResponseEntity<ResponseDTO<BuildingListResponseDTO>> buildingList(BuildingSearchRequestDTO params) {
-		try {
-			List<BuildingResponseDTO> buildings = buildingService.findAll(params);
+  @GetMapping("")
+  public ResponseEntity<ResponseDTO<BuildingListResponseDTO>> buildingList(BuildingSearchRequestDTO params) {
+    try {
+      int page = params.getPage() <= 0 ? 1 : params.getPage();
+      int limit = params.getLimit() <= 0 ? 10 : params.getLimit();
 
-			System.out.println(params);
+      Pageable pageable = PageRequest.of(page - 1, limit);
 
-			BuildingListResponseDTO payload = new BuildingListResponseDTO();
-			payload.setBuildings(buildings);
-			payload.setStaffs(userService.getStaffs());
-			payload.setDistricts(District.type());
-			payload.setRentTypes(RentType.type()); // nhớ import enum RentType của bạn
+      List<BuildingResponseDTO> buildings = buildingService.findAll(params, pageable);
+      long totalItem = buildingService.countTotalItem(params);
 
-			ResponseDTO<BuildingListResponseDTO> response = new ResponseDTO<>();
-			response.setData(payload);
-			response.setMessage("Success");
-			response.setDetail("Get success building lists");
+      BuildingListResponseDTO payload = new BuildingListResponseDTO();
+      payload.setBuildings(buildings);
+      payload.setStaffs(userService.getStaffs());
+      payload.setDistricts(District.type());
+      payload.setRentTypes(RentType.type());
 
-			return ResponseEntity.ok(response);
-		} catch (Exception e) {
-			ResponseDTO<BuildingListResponseDTO> errorResponse = new ResponseDTO<>();
-			errorResponse.setMessage("Failed");
-			errorResponse.setDetail(e.getMessage());
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
-		}
-	}
+      ResponseDTO<BuildingListResponseDTO> response = new ResponseDTO<>();
+      response.setData(payload);
+      response.setTotalItem(totalItem);
+      response.setMessage("Success");
+      response.setDetail("Get success building lists");
+
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      ResponseDTO<BuildingListResponseDTO> errorResponse = new ResponseDTO<>();
+      errorResponse.setData(null);
+      errorResponse.setTotalItem(0L);
+      errorResponse.setMessage("Failed");
+      errorResponse.setDetail(e.getMessage());
+
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+    }
+  }
 
 	// [PATCH] /api/buildings/change-status/{id}/{status}
 	@PatchMapping("/change-status/{id}/{status}")

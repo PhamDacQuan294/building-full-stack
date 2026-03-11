@@ -7,11 +7,13 @@ import com.javaweb.model.request.common.ChangeMultiStatusRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.building.BuildingDetailResponseDTO;
 import com.javaweb.model.response.building.BuildingResponseDTO;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface BuildingService {
-  List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params);
+  List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params, Pageable pageable);
+  int countTotalItem(BuildingSearchRequestDTO params);
 
   void changeStatus(Long id, String status);
 

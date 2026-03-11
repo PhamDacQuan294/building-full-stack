@@ -41,7 +41,9 @@ export default function BuildingTable() {
   const [selectedIds, setSelectedIds] = useState<Array<string | number>>([]);
   const [bulkStatus, setBulkStatus] = useState("");
   const [openAssign, setOpenAssign] = useState(false);
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string | number | null>(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<
+    string | number | null
+  >(null);
 
   const handleOpenAssign = (id: string | number) => {
     setSelectedBuildingId(id);
@@ -112,6 +114,24 @@ export default function BuildingTable() {
     }
   };
 
+  const renderPageNumbers = () => {
+    const pages = [];
+    for (let i = 1; i <= pagination.totalPage; i++) {
+      pages.push(
+        <Button
+          key={i}
+          size="sm"
+          variant={pagination.page === i ? "default" : "outline"}
+          disabled={loading}
+          onClick={() => goToPage(i)}
+        >
+          {i}
+        </Button>,
+      );
+    }
+    return pages;
+  };
+
   return (
     <Card className="rounded-xl border-border">
       <CardHeader>
@@ -142,7 +162,9 @@ export default function BuildingTable() {
                 <TableHead className="w-[44px]">
                   <div className="flex justify-center">
                     <Checkbox
-                      checked={items.length > 0 && selectedIds.length === items.length}
+                      checked={
+                        items.length > 0 && selectedIds.length === items.length
+                      }
                       onCheckedChange={(checked) => handleSelectAll(!!checked)}
                     />
                   </div>
@@ -331,42 +353,32 @@ export default function BuildingTable() {
           />
         </div>
 
-        <div className="flex items-center justify-end gap-2 mt-4">
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={loading || pagination.page <= 1}
-            onClick={() => goToPage(pagination.page - 1)}
-          >
-            Trang trước
-          </Button>
+        <div className="flex items-center justify-between gap-3 mt-4">
+          <div className="text-sm text-muted-foreground">
+            Tổng {pagination.totalItems} toà nhà
+          </div>
 
-          <Button
-            size="sm"
-            variant={pagination.page === 1 ? "default" : "outline"}
-            disabled={loading}
-            onClick={() => goToPage(1)}
-          >
-            1
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={loading || pagination.page <= 1}
+              onClick={() => goToPage(pagination.page - 1)}
+            >
+              Trang trước
+            </Button>
 
-          <Button
-            size="sm"
-            variant={pagination.page === 2 ? "default" : "outline"}
-            disabled={loading || pagination.totalPage < 2}
-            onClick={() => goToPage(2)}
-          >
-            2
-          </Button>
+            {renderPageNumbers()}
 
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={loading || pagination.page >= pagination.totalPage}
-            onClick={() => goToPage(pagination.page + 1)}
-          >
-            Trang sau
-          </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={loading || pagination.page >= pagination.totalPage}
+              onClick={() => goToPage(pagination.page + 1)}
+            >
+              Trang sau
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
