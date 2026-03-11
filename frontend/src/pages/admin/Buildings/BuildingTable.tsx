@@ -132,6 +132,20 @@ export default function BuildingTable() {
     return pages;
   };
 
+  const handleDelete = async (id: string | number) => {
+    const confirmed = window.confirm("Bạn có chắc muốn xoá toà nhà này không?");
+    if (!confirmed) return;
+
+    try {
+      await buildingService.deleteBuilding(id);
+      toast.success("Xoá toà nhà thành công!");
+      await search();
+    } catch (error) {
+      console.error(error);
+      toast.error("Xoá toà nhà thất bại!");
+    }
+  };
+
   return (
     <Card className="rounded-xl border-border">
       <CardHeader>
@@ -316,6 +330,7 @@ export default function BuildingTable() {
                             size="icon"
                             className="text-white bg-red-500 hover:bg-red-600"
                             title="Xoá"
+                            onClick={() => handleDelete(item.id)}
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

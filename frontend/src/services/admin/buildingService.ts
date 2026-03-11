@@ -116,4 +116,9 @@ export const buildingService = {
     const res = await api.get("/buildings/meta");
     return res.data;
   },
+
+  deleteBuilding: async (id: string | number) => {
+    const res = await api.delete(`/buildings/delete/${id}`);
+    return res.data;
+  },
 };

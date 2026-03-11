@@ -28,4 +28,6 @@ public interface BuildingService {
   void updateBuilding(Long id, BuildingRequestDTO request);
 
   BuildingDetailResponseDTO getBuildingDetail(Long id);
+
+  void deleteBuilding(Long id);
 }

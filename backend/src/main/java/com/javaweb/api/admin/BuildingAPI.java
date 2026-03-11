@@ -305,4 +305,32 @@ public class BuildingAPI {
       return ResponseEntity.internalServerError().body(response);
     }
   }
+
+  @DeleteMapping("/delete/{id}")
+  public ResponseEntity<ResponseDTO<?>> deleteBuilding(@PathVariable Long id) {
+    try {
+      buildingService.deleteBuilding(id);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Xoá toà nhà thành công");
+      response.setData(null);
+
+      return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail(e.getMessage());
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
+    } catch (Exception e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail("Lỗi server");
+      response.setData(null);
+
+      return ResponseEntity.internalServerError().body(response);
+    }
+  }
 }

@@ -200,4 +200,12 @@ public class BuildingServiceImpl implements BuildingService {
 
     return buildingDTOConverter.toBuildingDetailResponseDTO(building);
   }
+
+  @Override
+  public void deleteBuilding(Long id) {
+    BuildingEntity building = buildingRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy toà nhà"));
+
+    buildingRepository.delete(building);
+  }
 }
