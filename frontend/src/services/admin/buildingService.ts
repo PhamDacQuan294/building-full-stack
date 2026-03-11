@@ -1,5 +1,10 @@
 import api from "@/lib/axios";
-import type { AssignBuildingRequest, BuildingFilters, BuildingResponse } from "@/types/admin/buildings";
+import type {
+  AssignBuildingRequest,
+  BuildingFilters,
+  BuildingResponse,
+  BuildingPayload,
+} from "@/types/admin/buildings";
 
 type QueryParams = Record<string, string | number | boolean | string[]>;
 
@@ -7,7 +12,9 @@ const isStringArray = (v: unknown): v is string[] =>
   Array.isArray(v) && v.every((x) => typeof x === "string");
 
 function buildParams(filters: BuildingFilters): QueryParams {
-  const selectedTypes = Object.keys(filters.types).filter((k) => filters.types[k]);
+  const selectedTypes = Object.keys(filters.types).filter(
+    (k) => filters.types[k],
+  );
 
   const raw: Record<string, unknown> = {
     name: filters.name?.trim(),
@@ -34,7 +41,11 @@ function buildParams(filters: BuildingFilters): QueryParams {
     if (value === null || value === undefined) continue;
     if (typeof value === "string" && value.trim() === "") continue;
 
-    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+    if (
+      typeof value === "string" ||
+      typeof value === "number" ||
+      typeof value === "boolean"
+    ) {
       params[key] = value;
       continue;
     }
@@ -64,17 +75,45 @@ export const buildingService = {
     const res = await api.patch("/buildings/change-multi", {
       ids,
       status,
-    })
-    return res.data
+    });
+    return res.data;
   },
 
   loadStaffs: async (buildingId: string | number) => {
-    const res = await api.get(`/buildings/${buildingId}/staffs`)
-    return res.data
+    const res = await api.get(`/buildings/${buildingId}/staffs`);
+    return res.data;
   },
 
   assignBuilding: async (payload: AssignBuildingRequest) => {
-    const res = await api.post("/buildings/assignment", payload)
+    const res = await api.post("/buildings/assignment", payload);
+    return res.data;
+  },
+
+  createBuilding: async (payload: BuildingPayload) => {
+    const res = await api.post("/buildings/create", payload)
     return res.data
+  },
+
+  getBuildingDetail: async (id: string | number) => {
+    const res = await api.get(`/buildings/detail/${id}`)
+    return res.data
+  },
+
+  updateBuilding: async (id: string | number, payload: BuildingPayload) => {
+    const res = await api.put(`/buildings/edit/${id}`, payload)
+    return res.data
+  },
+
+  uploadBuildingImage: async (file: File) => {
+    const formData = new FormData()
+    formData.append("file", file)
+
+    const res = await api.post("/buildings/upload", formData)
+    return res.data
+  },
+
+  getBuildingMeta: async () => {
+    const res = await api.get("/buildings/meta");
+    return res.data;
   },
 };

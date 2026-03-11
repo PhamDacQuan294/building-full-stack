@@ -1,5 +1,7 @@
 import { LayoutDefault } from "@/layouts/admin/LayoutDefault";
 import Building from "@/pages/admin/Buildings";
+import CreateBuilding from "@/pages/admin/Buildings/CreateBuilding";
+import EditBuilding from "@/pages/admin/Buildings/EditBuilding";
 
 const routes = [
   {
@@ -9,6 +11,14 @@ const routes = [
       {
         path: "buildings",
         element: <Building />
+      },
+      {
+        path: "buildings/create",
+        element: <CreateBuilding />
+      },
+      {
+        path: "buildings/:id/edit",
+        element: <EditBuilding />
       }
     ]
   }

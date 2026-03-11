@@ -25,7 +25,7 @@ const Sidebar = () => {
 
           <li>
             <NavLink
-              to="/products-category"
+              to="/admin/buildings"
               className={({ isActive }) =>
                 `block border-b border-sidebar-border px-[10px] py-[6px] transition 
                 ${

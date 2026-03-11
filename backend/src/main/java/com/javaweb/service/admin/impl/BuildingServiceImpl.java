@@ -6,9 +6,11 @@ import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.enums.CommonStatus;
 import com.javaweb.model.request.building.AssignmentBuildingRequestDTO;
+import com.javaweb.model.request.building.BuildingRequestDTO;
 import com.javaweb.model.request.building.BuildingSearchRequestDTO;
 import com.javaweb.model.request.common.ChangeMultiStatusRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.building.BuildingDetailResponseDTO;
 import com.javaweb.model.response.building.BuildingResponseDTO;
 import com.javaweb.model.response.user.StaffResponseDTO;
 import com.javaweb.repository.admin.AssignmentBuildingRepository;
@@ -16,6 +18,7 @@ import com.javaweb.repository.admin.BuildingRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.repository.admin.custom.BuildingRepositoryCustom;
 import com.javaweb.service.admin.BuildingService;
+import com.javaweb.service.admin.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +43,9 @@ public class BuildingServiceImpl implements BuildingService {
 
 	@Autowired
 	private AssignmentBuildingRepository assignmentBuildingRepository;
+
+  @Autowired
+  private UploadService uploadService;
 
 	@Override
 	public List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params) {
@@ -153,4 +159,37 @@ public class BuildingServiceImpl implements BuildingService {
 	    }
 	}
 
+  @Override
+  public void createBuilding(BuildingRequestDTO request) {
+    BuildingEntity building = buildingDTOConverter.toBuildingEntity(request);
+    building.setImage(request.getImageUrl());
+
+    if (building.getStatus() == null) {
+      building.setStatus(CommonStatus.ACTIVE);
+    }
+
+    buildingRepository.save(building);
+  }
+
+  @Override
+  public void updateBuilding(Long id, BuildingRequestDTO request) {
+    BuildingEntity building = buildingRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy toà nhà"));
+
+    buildingDTOConverter.updateBuildingEntity(request, building);
+
+    if (request.getImageUrl() != null && !request.getImageUrl().isBlank()) {
+      building.setImage(request.getImageUrl());
+    }
+
+    buildingRepository.save(building);
+  }
+
+  @Override
+  public BuildingDetailResponseDTO getBuildingDetail(Long id) {
+    BuildingEntity building = buildingRepository.findById(id)
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy toà nhà"));
+
+    return buildingDTOConverter.toBuildingDetailResponseDTO(building);
+  }
 }

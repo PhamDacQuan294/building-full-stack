@@ -3,19 +3,25 @@ package com.javaweb.api.admin;
 import com.javaweb.enums.District;
 import com.javaweb.enums.RentType;
 import com.javaweb.model.request.building.AssignmentBuildingRequestDTO;
+import com.javaweb.model.request.building.BuildingRequestDTO;
 import com.javaweb.model.request.building.BuildingSearchRequestDTO;
 import com.javaweb.model.request.common.ChangeMultiStatusRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.building.BuildingDetailResponseDTO;
 import com.javaweb.model.response.building.BuildingListResponseDTO;
 import com.javaweb.model.response.building.BuildingResponseDTO;
 import com.javaweb.service.admin.BuildingService;
 import com.javaweb.service.admin.IUserService;
+import com.javaweb.service.admin.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin/buildings")
@@ -26,6 +32,9 @@ public class BuildingAPI {
 
 	@Autowired
 	private IUserService userService;
+
+  @Autowired
+  private UploadService uploadService;
 
 	// [GET] /api/buildings
 	@GetMapping("")
@@ -163,4 +172,127 @@ public class BuildingAPI {
 	        return ResponseEntity.internalServerError().body(response);
 	    }
 	}
+
+  @PostMapping(value = "/upload", consumes = "multipart/form-data")
+  public ResponseEntity<ResponseDTO<?>> uploadImage(@RequestParam("file") MultipartFile file) {
+    try {
+      System.out.println(file);
+      String imageUrl = uploadService.uploadFile(file);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Upload ảnh thành công");
+      response.setData(imageUrl);
+
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail("Upload ảnh thất bại");
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
+    }
+  }
+
+  @PostMapping("/create")
+  public ResponseEntity<ResponseDTO<?>> createBuilding(@RequestBody BuildingRequestDTO request) {
+    try {
+      buildingService.createBuilding(request);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Tạo toà nhà thành công");
+      response.setData(null);
+
+      return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail(e.getMessage());
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
+    } catch (Exception e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail("Lỗi server");
+      response.setData(null);
+
+      return ResponseEntity.internalServerError().body(response);
+    }
+  }
+
+  @PutMapping("/edit/{id}")
+  public ResponseEntity<ResponseDTO<?>> updateBuilding(@PathVariable Long id, @RequestBody BuildingRequestDTO request) {
+    try {
+      buildingService.updateBuilding(id, request);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Cập nhật toà nhà thành công");
+      response.setData(null);
+
+      return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail(e.getMessage());
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
+    }
+  }
+
+  @GetMapping("/detail/{id}")
+  public ResponseEntity<ResponseDTO<?>> getBuildingDetail(@PathVariable Long id) {
+    try {
+      BuildingDetailResponseDTO building = buildingService.getBuildingDetail(id);
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Lấy chi tiết toà nhà thành công");
+      response.setData(building);
+
+      return ResponseEntity.ok(response);
+    } catch (RuntimeException e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail(e.getMessage());
+      response.setData(null);
+
+      return ResponseEntity.badRequest().body(response);
+    } catch (Exception e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail("Lỗi server");
+      response.setData(null);
+
+      return ResponseEntity.internalServerError().body(response);
+    }
+  }
+
+  @GetMapping("/meta")
+  public ResponseEntity<ResponseDTO<?>> getBuildingMeta() {
+    try {
+      Map<String, Object> payload = new HashMap<>();
+      payload.put("districts", District.type());
+      payload.put("rentTypes", RentType.type());
+      payload.put("staffs", userService.getStaffs());
+
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("success");
+      response.setDetail("Lấy dữ liệu meta thành công");
+      response.setData(payload);
+
+      return ResponseEntity.ok(response);
+    } catch (Exception e) {
+      ResponseDTO<Object> response = new ResponseDTO<>();
+      response.setMessage("failed");
+      response.setDetail("Lỗi server");
+      response.setData(null);
+
+      return ResponseEntity.internalServerError().body(response);
+    }
+  }
 }

@@ -10,11 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { useBuildingStore } from "@/stores/admin/useBuildingStore";
-import { formatVND } from "@/utils/priceFormatter";
-import { buildingService } from "@/services/admin/buildingService";
-import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -22,21 +17,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+
+import { useBuildingStore } from "@/stores/admin/useBuildingStore";
+import { formatVND } from "@/utils/priceFormatter";
+import { buildingService } from "@/services/admin/buildingService";
+import { toast } from "sonner";
 import { useState } from "react";
-import { UserCheck } from "lucide-react";
+import { Link } from "react-router-dom";
 import AssignBuildingDialog from "@/components/admin/buildings/AssignBuildingDialog";
+
+import {
+  UserCheck,
+  ImageOff,
+  Pencil,
+  Trash2,
+  Eye,
+  Building2,
+} from "lucide-react";
 
 export default function BuildingTable() {
   const { items, loading, pagination, setFilters, search } = useBuildingStore();
   const [selectedIds, setSelectedIds] = useState<Array<string | number>>([]);
   const [bulkStatus, setBulkStatus] = useState("");
-  const [openAssign, setOpenAssign] = useState(false)
-  const [selectedBuildingId, setSelectedBuildingId] = useState<string | number | null>(null)
+  const [openAssign, setOpenAssign] = useState(false);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | number | null>(null);
 
   const handleOpenAssign = (id: string | number) => {
-    setSelectedBuildingId(id)
-    setOpenAssign(true)
-  }
+    setSelectedBuildingId(id);
+    setOpenAssign(true);
+  };
 
   const goToPage = async (page: number) => {
     setFilters({ page });
@@ -128,37 +138,30 @@ export default function BuildingTable() {
         <div className="overflow-x-auto border rounded-lg border-border">
           <Table className="w-full table-fixed">
             <TableHeader>
-              <TableRow className="bg-muted/40 border-border">
-                <TableHead className="w-[40px]">
+              <TableRow className="border-border bg-muted/40">
+                <TableHead className="w-[44px]">
                   <div className="flex justify-center">
                     <Checkbox
-                      checked={
-                        items.length > 0 && selectedIds.length === items.length
-                      }
+                      checked={items.length > 0 && selectedIds.length === items.length}
                       onCheckedChange={(checked) => handleSelectAll(!!checked)}
                     />
                   </div>
                 </TableHead>
 
                 <TableHead className="w-[70px] text-center">STT</TableHead>
-
-                <TableHead className="w-[100px]">Tên toà nhà</TableHead>
-
-                <TableHead className="w-[320px]">Địa điểm</TableHead>
-
-                <TableHead className="w-[140px] text-center">
-                  Diện tích sàn
+                <TableHead className="w-[120px] text-center">Ảnh</TableHead>
+                <TableHead className="w-[160px]">Tên toà nhà</TableHead>
+                <TableHead className="w-[280px]">Địa điểm</TableHead>
+                <TableHead className="w-[130px] text-center">
+                  Diện tích
                 </TableHead>
-
-                <TableHead className="w-[150px] text-center">
+                <TableHead className="w-[140px] text-center">
                   Giá thuê
                 </TableHead>
-
-                <TableHead className="w-[140px] text-center">
+                <TableHead className="w-[130px] text-center">
                   Trạng thái
                 </TableHead>
-
-                <TableHead className="w-[350px] text-center">
+                <TableHead className="w-[220px] text-center">
                   Hành động
                 </TableHead>
               </TableRow>
@@ -168,7 +171,7 @@ export default function BuildingTable() {
               {loading ? (
                 <TableRow>
                   <TableCell
-                    colSpan={8}
+                    colSpan={9}
                     className="py-8 text-center text-muted-foreground"
                   >
                     Đang tải dữ liệu...
@@ -177,109 +180,157 @@ export default function BuildingTable() {
               ) : items.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={8}
+                    colSpan={9}
                     className="py-8 text-center text-muted-foreground"
                   >
                     Không có dữ liệu
                   </TableCell>
                 </TableRow>
               ) : (
-                items.map((item, index) => (
-                  <TableRow key={item.id} className="border-border">
-                    <TableCell>
-                      <div className="flex justify-center">
-                        <Checkbox
-                          checked={selectedIds.includes(item.id)}
-                          onCheckedChange={(checked) =>
-                            handleSelectOne(item.id, !!checked)
-                          }
-                        />
-                      </div>
-                    </TableCell>
+                items.map((item, index) => {
+                  const imageSrc = item.imageUrl || item.image || "";
 
-                    <TableCell className="text-center">
-                      {(pagination.page - 1) * 10 + (index + 1)}
-                    </TableCell>
+                  return (
+                    <TableRow key={item.id} className="border-border">
+                      <TableCell>
+                        <div className="flex justify-center">
+                          <Checkbox
+                            checked={selectedIds.includes(item.id)}
+                            onCheckedChange={(checked) =>
+                              handleSelectOne(item.id, !!checked)
+                            }
+                          />
+                        </div>
+                      </TableCell>
 
-                    <TableCell className="font-medium truncate">
-                      {item.name}
-                    </TableCell>
+                      <TableCell className="text-center">
+                        {(pagination.page - 1) * 10 + (index + 1)}
+                      </TableCell>
 
-                    <TableCell className="truncate text-muted-foreground">
-                      {item.address || "-"}
-                    </TableCell>
+                      <TableCell>
+                        <div className="flex justify-center">
+                          {imageSrc ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <img
+                                  src={imageSrc}
+                                  alt={item.name}
+                                  className="h-16 w-24 cursor-pointer rounded-lg border object-cover shadow-sm transition hover:scale-[1.03]"
+                                />
+                              </DialogTrigger>
+                              <DialogContent className="max-w-4xl p-0 bg-transparent border-none shadow-none">
+                                <img
+                                  src={imageSrc}
+                                  alt={item.name}
+                                  className="max-h-[85vh] w-full rounded-xl object-contain"
+                                />
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            <div className="flex flex-col items-center justify-center w-24 h-16 border rounded-lg bg-muted/40 text-muted-foreground">
+                              <ImageOff className="w-5 h-5 mb-1" />
+                              <span className="text-[11px]">Không ảnh</span>
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
 
-                    <TableCell className="text-center">
-                      {item.floorArea ?? "-"}
-                    </TableCell>
+                      <TableCell className="font-medium truncate">
+                        <div className="flex items-center gap-2">
+                          <Building2 className="w-4 h-4 text-violet-500" />
+                          <span className="truncate">{item.name}</span>
+                        </div>
+                      </TableCell>
 
-                    <TableCell className="text-center">
-                      {item.rentPrice ? `${formatVND(item.rentPrice)}` : "-"}
-                    </TableCell>
+                      <TableCell className="truncate text-muted-foreground">
+                        {item.address || "-"}
+                      </TableCell>
 
-                    <TableCell className="text-center">
-                      {item.status === "ACTIVE" ? (
-                        <Badge
-                          className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary w-[80px]"
-                          onClick={() =>
-                            handleToggleStatus(item.id, item.status!)
-                          }
-                        >
-                          Hoạt động
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="destructive"
-                          className="cursor-pointer w-[80px]"
-                          onClick={() =>
-                            handleToggleStatus(item.id, item.status!)
-                          }
-                        >
-                          Dừng
-                        </Badge>
-                      )}
-                    </TableCell>
+                      <TableCell className="text-center">
+                        {item.floorArea ?? "-"}
+                      </TableCell>
 
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          className="text-white bg-yellow-500 hover:bg-yellow-600"
-                        >
-                          Sửa
-                        </Button>
+                      <TableCell className="text-center">
+                        {item.rentPrice ? formatVND(item.rentPrice) : "-"}
+                      </TableCell>
 
-                        <Button
-                          size="sm"
-                          className="text-white bg-red-500 hover:bg-red-600"
-                        >
-                          Xoá
-                        </Button>
+                      <TableCell className="text-center">
+                        {item.status === "ACTIVE" ? (
+                          <Badge
+                            className="w-[90px] cursor-pointer bg-primary text-primary-foreground hover:bg-primary"
+                            onClick={() =>
+                              handleToggleStatus(item.id, item.status!)
+                            }
+                          >
+                            Hoạt động
+                          </Badge>
+                        ) : (
+                          <Badge
+                            variant="destructive"
+                            className="w-[90px] cursor-pointer"
+                            onClick={() =>
+                              handleToggleStatus(item.id, item.status!)
+                            }
+                          >
+                            Dừng
+                          </Badge>
+                        )}
+                      </TableCell>
 
-                        <Button
-                          size="sm"
-                          className="text-white bg-blue-500 hover:bg-blue-600"
-                        >
-                          Chi tiết
-                        </Button>
-                        <Button
-                          variant="outline"
-                          className="gap-2 border-border"
-                          onClick={() => handleOpenAssign(item.id)}
-                        >
-                          <UserCheck className="w-4 h-4" />
-                          Giao toà nhà
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))
+                      <TableCell>
+                        <div className="flex items-center justify-center gap-2">
+                          <Button
+                            size="icon"
+                            className="text-white bg-yellow-500 hover:bg-yellow-600"
+                            asChild
+                            title="Sửa"
+                          >
+                            <Link to={`/admin/buildings/${item.id}/edit`}>
+                              <Pencil className="w-4 h-4" />
+                            </Link>
+                          </Button>
+
+                          <Button
+                            size="icon"
+                            className="text-white bg-red-500 hover:bg-red-600"
+                            title="Xoá"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+
+                          <Button
+                            size="icon"
+                            className="text-white bg-blue-500 hover:bg-blue-600"
+                            title="Chi tiết"
+                          >
+                            <Eye className="w-4 h-4" />
+                          </Button>
+
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="border-border"
+                            onClick={() => handleOpenAssign(item.id)}
+                            title="Giao toà nhà"
+                          >
+                            <UserCheck className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
-        <AssignBuildingDialog open={openAssign} onOpenChange={setOpenAssign} buildingId={selectedBuildingId}/>
+
+          <AssignBuildingDialog
+            open={openAssign}
+            onOpenChange={setOpenAssign}
+            buildingId={selectedBuildingId}
+          />
         </div>
-        
+
         <div className="flex items-center justify-end gap-2 mt-4">
           <Button
             size="sm"

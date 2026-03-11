@@ -26,6 +26,8 @@ export interface BuildingItem {
   floorArea?: number;
   rentPrice?: number;
   status?: string;
+  imageUrl?: string;
+  // image?: string;
 }
 
 export type IdNameMap = Record<string, string>;
@@ -49,4 +51,51 @@ export interface BuildingResponse {
 export interface AssignBuildingRequest {
   buildingId: number
   staffs: number[]
+}
+
+export interface BuildingFormData {
+  name: string
+  district: string
+  ward: string
+  street: string
+  basement: string
+  floorArea: string
+  rentPrice: string
+  managerName: string
+  managerPhone: string
+  status: "ACTIVE" | "INACTIVE"
+  imageFile?: File | null
+  imageUrl?: string
+
+  structure?: string
+  direction?: string
+  level?: string
+  rentTime?: string
+  serviceFee?: string
+  carFee?: string
+  motorbikeFee?: string
+  overtimeFee?: string
+  waterFee?: string
+  electricityFee?: string
+  deposit?: string
+  payment?: string
+  decorationTime?: string
+  brokerageFee?: string
+  note?: string
+  linkOfBuilding?: string
+  map?: string
+}
+
+export interface BuildingPayload {
+  name: string
+  district: string
+  ward: string
+  street: string
+  basement: string
+  floorArea: string
+  rentPrice: string
+  managerName: string
+  managerPhone: string
+  status: "ACTIVE" | "INACTIVE"
+  imageUrl?: string
 }

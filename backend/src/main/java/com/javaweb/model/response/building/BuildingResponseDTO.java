@@ -22,4 +22,5 @@ public class BuildingResponseDTO extends AbstractResponseDTO {
   private String serviceFee;
   private Double brokerageFee;
   private String status;
+  private String imageUrl;
 }

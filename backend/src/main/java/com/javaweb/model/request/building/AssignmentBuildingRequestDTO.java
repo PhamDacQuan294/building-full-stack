@@ -11,5 +11,5 @@ import lombok.Setter;
 @Setter
 public class AssignmentBuildingRequestDTO {
 	private Long buildingId;
-    private List<Long> staffs;
+  private List<Long> staffs;
 }
