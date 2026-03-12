@@ -41,7 +41,7 @@ const Sidebar = () => {
 
           <li>
             <NavLink
-              to="/products-category"
+              to="/admin/roles"
               className={({ isActive }) =>
                 `block border-b border-sidebar-border px-[10px] py-[6px] transition 
                 ${
@@ -51,7 +51,7 @@ const Sidebar = () => {
                 }`
               }
             >
-              Danh mục sản phẩm
+              Danh sách nhóm quyền
             </NavLink>
           </li>
 
