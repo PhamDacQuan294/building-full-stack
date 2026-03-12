@@ -38,6 +38,8 @@ public class WebSecurityConfig {
 
         .requestMatchers(apiPrefix + "/admin/buildings/**").hasRole("ADMIN")
         .requestMatchers(apiPrefix + "/admin/roles/**").hasRole("ADMIN")
+        .requestMatchers("/api/admin/users/create").hasRole("ADMIN")
+        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
 
         .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
 

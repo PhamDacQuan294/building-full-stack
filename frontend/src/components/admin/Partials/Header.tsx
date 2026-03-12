@@ -1,7 +1,13 @@
 // src/components/admin/Header.jsx
+import { removeToken } from "@/utils/auth";
 import { Link } from "react-router-dom";
 
 const Header = () => {
+  const handleLogout = () => {
+      removeToken();
+      window.location.href = "/admin/login";
+  };
+
   return (
     <header className="top-0 z-[999] w-full border-b border-border bg-gradient-glass backdrop-blur-xl shadow-soft">
       <div className="px-6">
@@ -28,6 +34,7 @@ const Header = () => {
 
             <Link
               to="/admin/auth/logout"
+              onClick={handleLogout}
               className="inline-flex items-center rounded-md bg-destructive px-4 py-1.5 text-sm font-medium text-destructive-foreground shadow-sm transition hover:opacity-90"
             >
               Đăng xuất

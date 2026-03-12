@@ -1,13 +1,6 @@
 import { NavLink } from "react-router-dom";
-import { removeToken } from "@/utils/auth";
 
 const Sidebar = () => {
-
-  const handleLogout = () => {
-    removeToken();
-    window.location.href = "/login";
-  };
-
   const linkClass = ({ isActive }: { isActive: boolean }) =>
     `block border-b border-sidebar-border px-[10px] py-[6px] transition
     ${
@@ -40,14 +33,10 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <button
-              onClick={handleLogout}
-              className="w-full text-left px-[10px] py-[6px] hover:bg-red-500 hover:text-white"
-            >
-              Đăng xuất
-            </button>
+            <NavLink to="/admin/users" className={linkClass}>
+              Danh sách người dùng
+            </NavLink>
           </li>
-
         </ul>
       </div>
     </aside>

@@ -7,6 +7,8 @@ import CreateRole from "@/pages/admin/Roles/CreateRole";
 import EditRole from "@/pages/admin/Roles/EditRole";
 import RoleList from "@/pages/admin/Roles/RoleList";
 import ProtectedRoute from "./ProtectedRoute";
+import UserList from "@/pages/admin/Users/UserList";
+import CreateUser from "@/pages/admin/Users/CreateUser";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -47,9 +49,17 @@ const routes = [
           {
             path: "roles/:id/edit",
             element: <EditRole />
+          },
+          {
+            path: "users",
+            element: <UserList />
+          },
+          {
+            path: "users/create",
+            element: <CreateUser />
           }
         ]
-      }
+      },
     ]
   },
 
