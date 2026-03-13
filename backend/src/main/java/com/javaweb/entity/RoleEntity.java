@@ -20,4 +20,7 @@ public class RoleEntity extends BaseEntity {
 
   @Column(name = "code", nullable = false, unique = true, length = 50)
   private String code;
+
+  @Column(name = "description", length = 255)
+  private String description;
 }

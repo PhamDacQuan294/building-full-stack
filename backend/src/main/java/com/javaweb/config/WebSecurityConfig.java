@@ -35,6 +35,9 @@ public class WebSecurityConfig {
       .authorizeHttpRequests(request -> request
         .requestMatchers("/api/test/**").permitAll()
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/users/login").permitAll()
+        .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/forgot").permitAll()
+        .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/verify-otp").permitAll()
+        .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/reset").permitAll()
 
         .requestMatchers(apiPrefix + "/admin/buildings/**").hasRole("ADMIN")
         .requestMatchers(apiPrefix + "/admin/roles/**").hasRole("ADMIN")

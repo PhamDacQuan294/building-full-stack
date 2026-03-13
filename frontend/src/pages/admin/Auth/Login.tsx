@@ -75,6 +75,15 @@ export default function Login() {
           >
             {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
+
+          <div className="text-right">
+            <a
+              href="/forgot-password"
+              className="text-sm text-violet-600 hover:underline"
+            >
+              Quên mật khẩu?
+            </a>
+          </div>
         </form>
       </div>
     </div>
