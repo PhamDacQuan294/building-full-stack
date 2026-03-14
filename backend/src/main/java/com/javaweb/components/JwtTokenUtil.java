@@ -35,14 +35,23 @@ public class JwtTokenUtil {
 
   public String generateToken(UserEntity user) {
     Map<String, Object> claims = new HashMap<>();
+
     claims.put("email", user.getEmail());
+
     claims.put("roles", user.getRoles().stream()
       .map(role -> role.getCode())
+      .toList());
+
+    claims.put("authorities", user.getRoles().stream()
+      .flatMap(role -> role.getPermissions().stream())
+      .map(permission -> permission.getCode())
+      .distinct()
       .toList());
 
     return Jwts.builder()
       .setClaims(claims)
       .setSubject(user.getEmail())
+      .setIssuedAt(new Date())
       .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
       .signWith(getSignInKey(), SignatureAlgorithm.HS256)
       .compact();

@@ -39,12 +39,34 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/verify-otp").permitAll()
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/reset").permitAll()
 
-        .requestMatchers(apiPrefix + "/admin/buildings/**").hasRole("ADMIN")
-        .requestMatchers(apiPrefix + "/admin/roles/**").hasRole("ADMIN")
-        .requestMatchers("/api/admin/users/create").hasRole("ADMIN")
-        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
+        .requestMatchers(HttpMethod.GET, "/api/admin/buildings").hasAuthority("BUILDING_VIEW")
+        .requestMatchers(HttpMethod.GET, "/api/admin/buildings/detail/**").hasAuthority("BUILDING_VIEW")
+        .requestMatchers(HttpMethod.GET, "/api/admin/buildings/*/staffs").hasAuthority("BUILDING_VIEW")
 
-        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
+        .requestMatchers(HttpMethod.POST, "/api/admin/buildings/create").hasAuthority("BUILDING_CREATE")
+        .requestMatchers(HttpMethod.POST, "/api/admin/buildings/upload").hasAuthority("BUILDING_CREATE")
+        .requestMatchers(HttpMethod.POST, "/api/admin/buildings/assignment").hasAuthority("BUILDING_EDIT")
+
+        .requestMatchers(HttpMethod.PUT, "/api/admin/buildings/edit/**").hasAuthority("BUILDING_EDIT")
+
+        .requestMatchers(HttpMethod.PATCH, "/api/admin/buildings/change-status/**").hasAuthority("BUILDING_EDIT")
+        .requestMatchers(HttpMethod.PATCH, "/api/admin/buildings/change-multi").hasAuthority("BUILDING_EDIT")
+
+        .requestMatchers(HttpMethod.DELETE, "/api/admin/buildings/delete/**").hasAuthority("BUILDING_DELETE")
+
+//        .requestMatchers(apiPrefix + "/admin/buildings/**").hasRole("ADMIN")
+//        .requestMatchers(apiPrefix + "/admin/roles/**").hasRole("ADMIN")
+//        .requestMatchers("/api/admin/users/create").hasRole("ADMIN")
+//        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
+
+        .requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasAuthority("USER_VIEW")
+        .requestMatchers(HttpMethod.POST, "/api/admin/users/create").hasAuthority("USER_CREATE")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/users/edit/**").hasAuthority("USER_EDIT")
+        .requestMatchers(HttpMethod.DELETE, "/api/admin/users/delete/**").hasAuthority("USER_DELETE")
+
+        .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
+
+//        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
 
         .anyRequest().authenticated()
       );

@@ -1,12 +1,13 @@
 package com.javaweb.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
@@ -23,4 +24,12 @@ public class RoleEntity extends BaseEntity {
 
   @Column(name = "description", length = 255)
   private String description;
+
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(
+    name = "role_permission",
+    joinColumns = @JoinColumn(name = "roleid"),
+    inverseJoinColumns = @JoinColumn(name = "permissionid")
+  )
+  private Set<PermissionEntity> permissions = new HashSet<>();
 }

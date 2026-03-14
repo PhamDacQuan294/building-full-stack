@@ -21,7 +21,6 @@ const routes = [
     path: "/admin/login",
     element: <Login />,
   },
-
   {
     path: "/forgot-password",
     element: <ForgotPassword />,
@@ -36,7 +35,7 @@ const routes = [
   },
 
   {
-    element: <ProtectedRoute roles={["ADMIN"]} />,
+    element: <ProtectedRoute roles={["ADMIN", "STAFF"]} />,
     children: [
       {
         path: "/admin",
@@ -46,6 +45,18 @@ const routes = [
             path: "buildings",
             element: <Building />,
           },
+        ],
+      },
+    ],
+  },
+
+  {
+    element: <ProtectedRoute roles={["ADMIN"]} />,
+    children: [
+      {
+        path: "/admin",
+        element: <LayoutDefault />,
+        children: [
           {
             path: "buildings/create",
             element: <CreateBuilding />,
@@ -78,16 +89,6 @@ const routes = [
       },
     ],
   },
-
-  // {
-  //   element: <ProtectedRoute roles={["ADMIN", "STAFF"]} />,
-  //   children: [
-  //     {
-  //       path: "/admin/profile",
-  //       element: <Profile />
-  //     }
-  //   ]
-  // }
 ];
 
 export default routes;

@@ -31,3 +31,13 @@ export function getRolesFromToken(): string[] {
 
   return payload.roles;
 }
+
+export function getAuthoritiesFromToken(): string[] {
+  const token = getToken();
+  if (!token) return [];
+
+  const payload = parseJwt(token);
+  if (!payload || !payload.authorities) return [];
+
+  return payload.authorities;
+}

@@ -10,10 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -47,13 +44,28 @@ public class UserEntity extends BaseEntity implements UserDetails {
   )
   private Set<RoleEntity> roles = new HashSet<>();
 
+//  @Override
+//  public Collection<? extends GrantedAuthority> getAuthorities() {
+//    return roles.stream()
+//      .map(role -> new SimpleGrantedAuthority(
+//        "ROLE_" + role.getCode().toUpperCase()
+//      ))
+//      .toList();
+//  }
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return roles.stream()
-      .map(role -> new SimpleGrantedAuthority(
-        "ROLE_" + role.getCode().toUpperCase()
-      ))
-      .toList();
+    List<GrantedAuthority> authorities = new ArrayList<>();
+
+    for (RoleEntity role : roles) {
+      authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getCode()));
+
+      for (PermissionEntity permission : role.getPermissions()) {
+        authorities.add(new SimpleGrantedAuthority(permission.getCode()));
+      }
+    }
+
+    return authorities;
   }
 
   @Override

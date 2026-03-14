@@ -41,9 +41,7 @@ export default function BuildingTable() {
   const [selectedIds, setSelectedIds] = useState<Array<string | number>>([]);
   const [bulkStatus, setBulkStatus] = useState("");
   const [openAssign, setOpenAssign] = useState(false);
-  const [selectedBuildingId, setSelectedBuildingId] = useState<
-    string | number | null
-  >(null);
+  const [selectedBuildingId, setSelectedBuildingId] = useState<string | number | null>(null);
 
   const handleOpenAssign = (id: string | number) => {
     setSelectedBuildingId(id);
@@ -145,7 +143,7 @@ export default function BuildingTable() {
       toast.error("Xoá toà nhà thất bại!");
     }
   };
-
+  
   return (
     <Card className="rounded-xl border-border">
       <CardHeader>

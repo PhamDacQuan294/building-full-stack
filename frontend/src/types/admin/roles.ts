@@ -1,7 +1,16 @@
+export interface PermissionItem {
+  id: number;
+  code: string;
+  name: string;
+  description?: string;
+}
+
 export interface RoleItem {
   id: number;
-  name: string;
   code: string;
+  name: string;
+  description?: string;
+  permissions: PermissionItem[];
 }
 
 export interface RoleResponse {
@@ -16,7 +25,15 @@ export interface RoleDetailResponse {
   detail: string;
 }
 
+export interface PermissionResponse {
+  data: PermissionItem[];
+  message: string;
+  detail: string;
+}
+
 export interface RoleFormData {
-  name: string;
   code: string;
+  name: string;
+  description: string;
+  permissionIds: number[];
 }
