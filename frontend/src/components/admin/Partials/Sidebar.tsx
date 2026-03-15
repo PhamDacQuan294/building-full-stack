@@ -60,6 +60,38 @@ const Sidebar = () => {
               Nhật ký hoạt động
             </NavLink>
           </li>
+
+          <li>
+            <NavLink
+              to="/admin/mails"
+              className={({ isActive }) =>
+                `block border-b border-sidebar-border px-[10px] py-[6px] transition 
+                ${
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "hover:bg-sidebar-accent/60"
+                }`
+              }
+            >
+              Gửi email
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/admin/email-logs"
+              className={({ isActive }) =>
+                `block border-b border-sidebar-border px-[10px] py-[6px] transition 
+                ${
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "hover:bg-sidebar-accent/60"
+                }`
+              }
+            >
+              Lịch sử email
+            </NavLink>
+          </li>
         </ul>
       </div>
     </aside>

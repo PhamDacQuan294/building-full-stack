@@ -2,10 +2,12 @@ package com.javaweb.service.admin.impl;
 
 import com.javaweb.entity.ForgotPasswordEntity;
 import com.javaweb.entity.UserEntity;
+import com.javaweb.model.request.notification.ResetPasswordMailRequestDTO;
 import com.javaweb.repository.admin.ForgotPasswordRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.service.admin.EmailService;
 import com.javaweb.service.admin.ForgotPasswordService;
+import com.javaweb.service.admin.MailService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +32,9 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private MailService mailService;
 
   @Override
   public void sendOtp(String email) {
@@ -76,6 +81,15 @@ public class ForgotPasswordServiceImpl implements ForgotPasswordService {
     userRepository.save(user);
 
     forgotPasswordRepository.deleteByEmail(email);
+
+    ResetPasswordMailRequestDTO mailRequest = new ResetPasswordMailRequestDTO();
+    mailRequest.setActorId(null);
+    mailRequest.setReceiverId(user.getId());
+    mailRequest.setToEmail(user.getEmail());
+    mailRequest.setFullName(user.getFullname());
+    mailRequest.setOtp(otp);
+
+    mailService.sendResetPasswordOtpMail(mailRequest);
   }
 
   private String generateOtp() {

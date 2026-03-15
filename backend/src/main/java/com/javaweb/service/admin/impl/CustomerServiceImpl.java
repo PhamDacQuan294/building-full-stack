@@ -11,6 +11,7 @@ import com.javaweb.model.request.customer.AssignmentCustomerRequestDTO;
 import com.javaweb.model.request.customer.CustomerCareRequestDTO;
 import com.javaweb.model.request.customer.CustomerRequestDTO;
 import com.javaweb.model.request.customer.CustomerSearchRequestDTO;
+import com.javaweb.model.request.notification.AssignmentMailRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
 import com.javaweb.model.response.customer.CustomerCareResponseDTO;
 import com.javaweb.model.response.customer.CustomerDetailResponseDTO;
@@ -24,6 +25,8 @@ import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.repository.admin.custom.CustomerRepositoryCustom;
 import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.CustomerService;
+import com.javaweb.service.admin.MailService;
+import com.javaweb.service.admin.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -58,6 +61,12 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Autowired
   private ActivityLogService activityLogService;
+
+  @Autowired
+  private MailService mailService;
+
+  @Autowired
+  private SecurityService securityService;
 
   @Override
   public List<CustomerResponseDTO> findAll(CustomerSearchRequestDTO request) {
@@ -173,6 +182,8 @@ public class CustomerServiceImpl implements CustomerService {
       return;
     }
 
+    UserEntity currentAdmin = securityService.getCurrentUser();
+
     for (Long staffId : request.getStaffs()) {
       UserEntity staff = userRepository.findById(staffId)
         .orElseThrow(() -> new RuntimeException("Không tìm thấy staff"));
@@ -182,6 +193,18 @@ public class CustomerServiceImpl implements CustomerService {
       assignment.setStaff(staff);
 
       assignmentCustomerRepository.save(assignment);
+
+      AssignmentMailRequestDTO mailRequest = new AssignmentMailRequestDTO();
+      mailRequest.setActorId(currentAdmin.getId());
+      mailRequest.setReceiverId(staff.getId());
+      mailRequest.setToEmail(staff.getEmail());
+      mailRequest.setStaffName(staff.getFullname());
+      mailRequest.setTitle("Bạn được giao khách hàng mới");
+      mailRequest.setContent("Bạn vừa được giao phụ trách khách hàng: " + customer.getFullname());
+      mailRequest.setModule("CUSTOMER");
+      mailRequest.setObjectId(customer.getId());
+
+      mailService.sendAssignmentMail(mailRequest);
     }
   }
 

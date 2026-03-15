@@ -1,48 +1,17 @@
 import { LayoutDefault } from "@/layouts/admin/LayoutDefault";
-import Login from "@/pages/admin/Auth/Login";
-import Building from "@/pages/admin/Buildings";
-import CreateBuilding from "@/pages/admin/Buildings/CreateBuilding";
-import EditBuilding from "@/pages/admin/Buildings/EditBuilding";
-import CreateRole from "@/pages/admin/Roles/CreateRole";
-import EditRole from "@/pages/admin/Roles/EditRole";
-import RoleList from "@/pages/admin/Roles/RoleList";
 import ProtectedRoute from "./ProtectedRoute";
-import UserList from "@/pages/admin/Users/UserList";
-import CreateUser from "@/pages/admin/Users/CreateUser";
-import ForgotPassword from "@/pages/admin/Auth/ForgotPassword";
-import VerifyOtp from "@/pages/admin/Auth/VerifyOtp";
-import ResetPassword from "@/pages/admin/Auth/ResetPassword";
-import CustomerList from "@/pages/admin/Customers/CustomerList";
-import CreateCustomer from "@/pages/admin/Customers/CreateCustomer";
-import EditCustomer from "@/pages/admin/Customers/EditCustomer";
-import CustomerCareHistory from "@/pages/admin/Customers/CustomerCareHistory";
-import TransactionList from "@/pages/admin/Transaction/TransactionList";
-import CreateTransaction from "@/pages/admin/Transaction/CreateTransaction";
-import EditTransaction from "@/pages/admin/Transaction/EditTransaction";
-import DashboardPage from "@/pages/admin/Dashboard";
-import ProfilePage from "@/pages/admin/Profile";
-import ActivityLogListPage from "@/pages/admin/ActivityLogs";
-// import Profile from "@/pages/admin/Profile";
-// import Login from "@/pages/Login";
-// import ProtectedRoute from "@/components/ProtectedRoute";
+
+import authRoutes from "./auth.routes";
+import buildingSharedRoutes from "./building.shared.routes";
+import buildingAdminRoutes from "./building.admin.routes";
+import roleRoutes from "./role.routes";
+import userRoutes from "./user.routes";
+import customerRoutes from "./customer.routes";
+import transactionRoutes from "./transaction.routes";
+import systemRoutes from "./system.routes";
 
 const routes = [
-  {
-    path: "/admin/login",
-    element: <Login />,
-  },
-  {
-    path: "/forgot-password",
-    element: <ForgotPassword />,
-  },
-  {
-    path: "/verify-otp",
-    element: <VerifyOtp />,
-  },
-  {
-    path: "/reset-password",
-    element: <ResetPassword />,
-  },
+  ...authRoutes,
 
   {
     element: <ProtectedRoute roles={["ADMIN", "STAFF"]} />,
@@ -50,12 +19,7 @@ const routes = [
       {
         path: "/admin",
         element: <LayoutDefault />,
-        children: [
-          {
-            path: "buildings",
-            element: <Building />,
-          },
-        ],
+        children: [...buildingSharedRoutes],
       },
     ],
   },
@@ -67,78 +31,12 @@ const routes = [
         path: "/admin",
         element: <LayoutDefault />,
         children: [
-          {
-            index: true,
-            element: <DashboardPage />,
-          },
-          {
-            path: "dashboard",
-            element: <DashboardPage />,
-          },
-          {
-            path: "buildings/create",
-            element: <CreateBuilding />,
-          },
-          {
-            path: "buildings/:id/edit",
-            element: <EditBuilding />,
-          },
-          {
-            path: "roles",
-            element: <RoleList />,
-          },
-          {
-            path: "roles/create",
-            element: <CreateRole />,
-          },
-          {
-            path: "roles/:id/edit",
-            element: <EditRole />,
-          },
-          {
-            path: "users",
-            element: <UserList />,
-          },
-          {
-            path: "users/create",
-            element: <CreateUser />,
-          },
-          {
-            path: "customers",
-            element: <CustomerList />,
-          },
-          {
-            path: "customers/create",
-            element: <CreateCustomer />,
-          },
-          {
-            path: "customers/:id/edit",
-            element: <EditCustomer />,
-          },
-          {
-            path: "customers/:id/care-history",
-            element: <CustomerCareHistory />,
-          },
-          {
-            path: "transactions",
-            element: <TransactionList />,
-          },
-          {
-            path: "transactions/create",
-            element: <CreateTransaction />,
-          },
-          {
-            path: "transactions/:id/edit",
-            element: <EditTransaction />,
-          },
-          {
-            path: "profile",
-            element: <ProfilePage />,
-          },
-          {
-            path: "activity-logs",
-            element: <ActivityLogListPage />,
-          },
+          ...systemRoutes,
+          ...buildingAdminRoutes,
+          ...roleRoutes,
+          ...userRoutes,
+          ...customerRoutes,
+          ...transactionRoutes,
         ],
       },
     ],

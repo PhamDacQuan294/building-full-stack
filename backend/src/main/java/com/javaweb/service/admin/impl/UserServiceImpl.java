@@ -5,16 +5,21 @@ import com.javaweb.customexceptions.DataNotFoundException;
 import com.javaweb.entity.RoleEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.enums.CommonStatus;
+import com.javaweb.model.request.notification.NewUserMailRequestDTO;
 import com.javaweb.model.request.user.CreateUserRequestDTO;
 import com.javaweb.model.response.user.UserItemResponseDTO;
 import com.javaweb.repository.admin.RoleRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.IUserService;
+import com.javaweb.service.admin.MailService;
+import com.javaweb.service.admin.SecurityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +44,12 @@ public class UserServiceImpl implements IUserService {
 
   @Autowired
   private ActivityLogService activityLogService;
+
+  @Autowired
+  private MailService mailService;
+
+  @Autowired
+  private SecurityService securityService;
 
   @Override
   public Map<Long, String> getStaffs() {
@@ -97,6 +108,7 @@ public class UserServiceImpl implements IUserService {
     return result;
   }
 
+
   @Override
   public void createUser(CreateUserRequestDTO request) {
     if (request.getFullName() == null || request.getFullName().trim().isEmpty()) {
@@ -127,6 +139,10 @@ public class UserServiceImpl implements IUserService {
       throw new RuntimeException("Tên đăng nhập không được để trống");
     }
 
+    UserEntity currentAdmin = securityService.getCurrentUser();
+
+    String rawPassword = request.getPassword().trim();
+
     UserEntity user = new UserEntity();
     user.setUsername(request.getUserName().trim());
     user.setFullname(request.getFullName().trim());
@@ -152,7 +168,18 @@ public class UserServiceImpl implements IUserService {
 
     user.setRoles(roles);
 
-    userRepository.save(user);
+    UserEntity savedUser = userRepository.save(user);
+
+    NewUserMailRequestDTO mailRequest = new NewUserMailRequestDTO();
+    mailRequest.setActorId(currentAdmin.getId());
+    mailRequest.setReceiverId(savedUser.getId());
+    mailRequest.setToEmail(savedUser.getEmail());
+    mailRequest.setFullName(savedUser.getFullname());
+    mailRequest.setEmail(savedUser.getEmail());
+    mailRequest.setPassword(rawPassword);
+    mailRequest.setRoleName("STAFF");
+
+    mailService.sendNewUserMail(mailRequest);
 
     activityLogService.save(
       "CREATE",
