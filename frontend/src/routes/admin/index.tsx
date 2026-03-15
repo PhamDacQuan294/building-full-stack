@@ -12,6 +12,9 @@ import CreateUser from "@/pages/admin/Users/CreateUser";
 import ForgotPassword from "@/pages/admin/Auth/ForgotPassword";
 import VerifyOtp from "@/pages/admin/Auth/VerifyOtp";
 import ResetPassword from "@/pages/admin/Auth/ResetPassword";
+import CustomerList from "@/pages/admin/Customers/CustomerList";
+import CreateCustomer from "@/pages/admin/Customers/CreateCustomer";
+import EditCustomer from "@/pages/admin/Customers/EditCustomer";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -85,6 +88,18 @@ const routes = [
             path: "users/create",
             element: <CreateUser />,
           },
+          {
+            path: "customers",
+            element: <CustomerList />
+          },
+          {
+            path: "customers/create",
+            element: <CreateCustomer />
+          },
+          {
+            path: "customers/:id/edit",
+            element: <EditCustomer />
+          }
         ],
       },
     ],

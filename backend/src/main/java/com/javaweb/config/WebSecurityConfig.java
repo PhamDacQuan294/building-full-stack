@@ -64,6 +64,12 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/api/admin/users/edit/**").hasAuthority("USER_EDIT")
         .requestMatchers(HttpMethod.DELETE, "/api/admin/users/delete/**").hasAuthority("USER_DELETE")
 
+        .requestMatchers(HttpMethod.GET, "/api/admin/customers/**").hasAuthority("CUSTOMER_VIEW")
+        .requestMatchers(HttpMethod.POST, "/api/admin/customers/create").hasAuthority("CUSTOMER_CREATE")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/customers/edit/**").hasAuthority("CUSTOMER_EDIT")
+        .requestMatchers(HttpMethod.DELETE, "/api/admin/customers/delete/**").hasAuthority("CUSTOMER_DELETE")
+        .requestMatchers(HttpMethod.POST, "/api/admin/customers/assignment").hasAuthority("CUSTOMER_ASSIGN")
+
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
 
 //        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")

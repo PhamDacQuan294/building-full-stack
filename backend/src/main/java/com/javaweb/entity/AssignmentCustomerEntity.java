@@ -10,8 +10,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Setter
 @Entity
 @Table(name = "assignmentcustomer")
-@SQLDelete(sql = "UPDATE assignmentcustomer SET deleted = true WHERE id = ?")
-@SQLRestriction("deleted = false")
 public class AssignmentCustomerEntity extends BaseEntity {
 
   @ManyToOne(fetch = FetchType.LAZY, optional = false)

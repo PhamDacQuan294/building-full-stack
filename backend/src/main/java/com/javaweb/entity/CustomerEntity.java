@@ -1,12 +1,14 @@
 package com.javaweb.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import com.javaweb.enums.CustomerStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.SQLRestriction;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -24,4 +26,20 @@ public class CustomerEntity extends BaseEntity {
 
   @Column(name = "email", length = 120)
   private String email;
+
+  @Column(name = "companyname")
+  private String companyName;
+
+  @Column(name = "demand", columnDefinition = "TEXT")
+  private String demand;
+
+  @Enumerated(EnumType.STRING)
+  @Column(name = "customer_status")
+  private CustomerStatus customerStatus;
+
+  @Column(name = "note", columnDefinition = "TEXT")
+  private String note;
+
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<AssignmentCustomerEntity> assignmentCustomers = new HashSet<>();
 }

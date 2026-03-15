@@ -37,6 +37,12 @@ const Sidebar = () => {
               Danh sách người dùng
             </NavLink>
           </li>
+
+          <li>
+            <NavLink to="/admin/customers">
+              Danh sách khách hàng
+            </NavLink>
+          </li>
         </ul>
       </div>
     </aside>
