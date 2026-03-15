@@ -69,6 +69,8 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/api/admin/customers/edit/**").hasAuthority("CUSTOMER_EDIT")
         .requestMatchers(HttpMethod.DELETE, "/api/admin/customers/delete/**").hasAuthority("CUSTOMER_DELETE")
         .requestMatchers(HttpMethod.POST, "/api/admin/customers/assignment").hasAuthority("CUSTOMER_ASSIGN")
+        .requestMatchers(HttpMethod.GET, "/api/admin/customers/*/care-history").hasAuthority("CUSTOMER_CARE_VIEW")
+        .requestMatchers(HttpMethod.POST, "/api/admin/customers/care-history").hasAuthority("CUSTOMER_CARE_CREATE")
 
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
 

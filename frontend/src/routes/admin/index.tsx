@@ -15,6 +15,7 @@ import ResetPassword from "@/pages/admin/Auth/ResetPassword";
 import CustomerList from "@/pages/admin/Customers/CustomerList";
 import CreateCustomer from "@/pages/admin/Customers/CreateCustomer";
 import EditCustomer from "@/pages/admin/Customers/EditCustomer";
+import CustomerCareHistory from "@/pages/admin/Customers/CustomerCareHistory";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -99,6 +100,10 @@ const routes = [
           {
             path: "customers/:id/edit",
             element: <EditCustomer />
+          },
+          {
+            path: "customers/:id/care-history",
+            element: <CustomerCareHistory />
           }
         ],
       },

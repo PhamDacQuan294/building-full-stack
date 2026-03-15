@@ -44,14 +44,8 @@ public class UserEntity extends BaseEntity implements UserDetails {
   )
   private Set<RoleEntity> roles = new HashSet<>();
 
-//  @Override
-//  public Collection<? extends GrantedAuthority> getAuthorities() {
-//    return roles.stream()
-//      .map(role -> new SimpleGrantedAuthority(
-//        "ROLE_" + role.getCode().toUpperCase()
-//      ))
-//      .toList();
-//  }
+  @OneToMany(mappedBy = "staff")
+  private Set<CustomerCareEntity> customerCares = new HashSet<>();
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {

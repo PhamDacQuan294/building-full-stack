@@ -1,11 +1,14 @@
 package com.javaweb.api.admin;
 
 import com.javaweb.model.request.customer.AssignmentCustomerRequestDTO;
+import com.javaweb.model.request.customer.CustomerCareRequestDTO;
 import com.javaweb.model.request.customer.CustomerRequestDTO;
 import com.javaweb.model.request.customer.CustomerSearchRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.customer.CustomerCareResponseDTO;
 import com.javaweb.model.response.customer.CustomerDetailResponseDTO;
 import com.javaweb.model.response.customer.CustomerResponseDTO;
+import com.javaweb.model.response.customer.StaffAssignmentResponseDTO;
 import com.javaweb.service.admin.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -79,10 +82,10 @@ public class CustomerAPI {
     return response;
   }
 
-  @GetMapping("/{id}/staffs")
-  public ResponseDTO<?> getStaffs(@PathVariable Long id) {
-    return customerService.listStaffs(id);
-  }
+//  @GetMapping("/{id}/staffs")
+//  public ResponseDTO<?> getStaffs(@PathVariable Long id) {
+//    return customerService.listStaffs(id);
+//  }
 
   @PostMapping("/assignment")
   public ResponseDTO<?> assignmentCustomer(@RequestBody AssignmentCustomerRequestDTO request) {
@@ -91,6 +94,38 @@ public class CustomerAPI {
     ResponseDTO<Object> response = new ResponseDTO<>();
     response.setMessage("success");
     response.setDetail("Giao khách hàng thành công");
+    return response;
+  }
+
+  @GetMapping("/{id}/staffs")
+  public ResponseDTO<?> getCustomerStaffs(@PathVariable Long id) {
+    List<StaffAssignmentResponseDTO> staffs = customerService.getStaffAssignments(id);
+
+    ResponseDTO<List<StaffAssignmentResponseDTO>> response = new ResponseDTO<>();
+    response.setData(staffs);
+    response.setMessage("success");
+    response.setDetail("Lấy danh sách staff thành công");
+    return response;
+  }
+
+  @GetMapping("/{id}/care-history")
+  public ResponseDTO<?> getCareHistory(@PathVariable Long id) {
+    List<CustomerCareResponseDTO> items = customerService.getCareHistory(id);
+
+    ResponseDTO<List<CustomerCareResponseDTO>> response = new ResponseDTO<>();
+    response.setData(items);
+    response.setMessage("success");
+    response.setDetail("Lấy lịch sử chăm sóc thành công");
+    return response;
+  }
+
+  @PostMapping("/care-history")
+  public ResponseDTO<?> createCareHistory(@RequestBody CustomerCareRequestDTO request) {
+    customerService.createCareHistory(request);
+
+    ResponseDTO<Object> response = new ResponseDTO<>();
+    response.setMessage("success");
+    response.setDetail("Thêm lịch sử chăm sóc thành công");
     return response;
   }
 }

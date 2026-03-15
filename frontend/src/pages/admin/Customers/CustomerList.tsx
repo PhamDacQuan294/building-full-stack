@@ -1,12 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCustomerStore } from "@/stores/admin/useCustomerStore";
 import { Button } from "@/components/ui/button";
 import { customerService } from "@/services/admin/customerService";
 import { toast } from "sonner";
+import AssignCustomerDialog from "./AssignCustomerDialog";
 
 export default function CustomerList() {
   const { items, loading, filters, setFilters, search } = useCustomerStore();
+  const [openAssign, setOpenAssign] = useState(false);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | null>(null);
 
   useEffect(() => {
     search();
@@ -21,6 +24,11 @@ export default function CustomerList() {
       console.error(error);
       toast.error("Xóa khách hàng thất bại");
     }
+  };
+
+  const handleOpenAssign = (id: number) => {
+    setSelectedCustomerId(id);
+    setOpenAssign(true);
   };
 
   return (
@@ -130,6 +138,20 @@ export default function CustomerList() {
 
                       <Button
                         size="sm"
+                        variant="outline"
+                        onClick={() => handleOpenAssign(item.id)}
+                      >
+                        Giao staff
+                      </Button>
+
+                      <Link to={`/admin/customers/${item.id}/care-history`}>
+                        <Button size="sm" variant="secondary">
+                          Lịch sử CSKH
+                        </Button>
+                      </Link>
+
+                      <Button
+                        size="sm"
                         variant="destructive"
                         onClick={() => handleDelete(item.id)}
                       >
@@ -143,6 +165,13 @@ export default function CustomerList() {
           </tbody>
         </table>
       </div>
+
+      <AssignCustomerDialog
+        open={openAssign}
+        onClose={() => setOpenAssign(false)}
+        customerId={selectedCustomerId}
+        onSuccess={search}
+      />
     </div>
   );
 }

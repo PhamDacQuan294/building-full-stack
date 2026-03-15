@@ -39,4 +39,18 @@ export const customerService = {
     });
     return res.data;
   },
+
+  getCareHistory: async (customerId: string | number) => {
+    const res = await api.get(`/customers/${customerId}/care-history`);
+    return res.data;
+  },
+
+  createCareHistory: async (payload: {
+    customerId: number;
+    content: string;
+    statusAfterCare: string;
+  }) => {
+    const res = await api.post("/customers/care-history", payload);
+    return res.data;
+  },
 };

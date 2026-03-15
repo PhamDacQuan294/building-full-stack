@@ -42,4 +42,7 @@ public class CustomerEntity extends BaseEntity {
 
   @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
   private Set<AssignmentCustomerEntity> assignmentCustomers = new HashSet<>();
+
+  @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
+  private Set<CustomerCareEntity> customerCares = new HashSet<>();
 }

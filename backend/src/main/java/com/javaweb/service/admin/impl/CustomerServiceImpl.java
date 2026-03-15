@@ -2,27 +2,35 @@ package com.javaweb.service.admin.impl;
 
 import com.javaweb.converter.CustomerDTOConverter;
 import com.javaweb.entity.AssignmentCustomerEntity;
+import com.javaweb.entity.CustomerCareEntity;
 import com.javaweb.entity.CustomerEntity;
 import com.javaweb.entity.UserEntity;
 import com.javaweb.enums.CommonStatus;
 import com.javaweb.enums.CustomerStatus;
 import com.javaweb.model.request.customer.AssignmentCustomerRequestDTO;
+import com.javaweb.model.request.customer.CustomerCareRequestDTO;
 import com.javaweb.model.request.customer.CustomerRequestDTO;
 import com.javaweb.model.request.customer.CustomerSearchRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
+import com.javaweb.model.response.customer.CustomerCareResponseDTO;
 import com.javaweb.model.response.customer.CustomerDetailResponseDTO;
 import com.javaweb.model.response.customer.CustomerResponseDTO;
+import com.javaweb.model.response.customer.StaffAssignmentResponseDTO;
 import com.javaweb.model.response.user.StaffResponseDTO;
 import com.javaweb.repository.admin.AssignmentCustomerRepository;
+import com.javaweb.repository.admin.CustomerCareRepository;
 import com.javaweb.repository.admin.CustomerRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.repository.admin.custom.CustomerRepositoryCustom;
 import com.javaweb.service.admin.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,6 +51,9 @@ public class CustomerServiceImpl implements CustomerService {
 
   @Autowired
   private AssignmentCustomerRepository assignmentCustomerRepository;
+
+  @Autowired
+  private CustomerCareRepository customerCareRepository;
 
   @Override
   public List<CustomerResponseDTO> findAll(CustomerSearchRequestDTO request) {
@@ -146,6 +157,75 @@ public class CustomerServiceImpl implements CustomerService {
       assignment.setStaff(staff);
 
       assignmentCustomerRepository.save(assignment);
+    }
+  }
+
+  @Override
+  public List<StaffAssignmentResponseDTO> getStaffAssignments(Long customerId) {
+    CustomerEntity customer = customerRepository.findById(customerId)
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+
+    List<UserEntity> staffs = userRepository.findByStatusAndRoles_Code(CommonStatus.ACTIVE, "STAFF");
+    List<AssignmentCustomerEntity> assignments = assignmentCustomerRepository.findByCustomer_Id(customer.getId());
+
+    List<Long> assignedStaffIds = new ArrayList<>();
+    for (AssignmentCustomerEntity item : assignments) {
+      assignedStaffIds.add(item.getStaff().getId());
+    }
+
+    List<StaffAssignmentResponseDTO> result = new ArrayList<>();
+    for (UserEntity staff : staffs) {
+      StaffAssignmentResponseDTO dto = new StaffAssignmentResponseDTO();
+      dto.setStaffId(staff.getId());
+      dto.setFullName(staff.getFullname());
+      dto.setChecked(assignedStaffIds.contains(staff.getId()));
+      result.add(dto);
+    }
+
+    return result;
+  }
+
+  @Override
+  public List<CustomerCareResponseDTO> getCareHistory(Long customerId) {
+    List<CustomerCareEntity> items = customerCareRepository.findByCustomer_IdOrderByCareDateDesc(customerId);
+
+    List<CustomerCareResponseDTO> result = new ArrayList<>();
+    for (CustomerCareEntity item : items) {
+      CustomerCareResponseDTO dto = new CustomerCareResponseDTO();
+      dto.setId(item.getId());
+      dto.setStaffName(item.getStaff().getFullname());
+      dto.setContent(item.getContent());
+      dto.setStatusAfterCare(item.getStatusAfterCare() != null ? item.getStatusAfterCare().name() : null);
+      dto.setCareDate(item.getCareDate());
+      result.add(dto);
+    }
+
+    return result;
+  }
+
+  @Override
+  public void createCareHistory(CustomerCareRequestDTO request) {
+    CustomerEntity customer = customerRepository.findById(request.getCustomerId())
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
+
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    String email = authentication.getName();
+
+    UserEntity staff = userRepository.findByEmail(email)
+      .orElseThrow(() -> new RuntimeException("Không tìm thấy staff đang đăng nhập"));
+
+    CustomerCareEntity entity = new CustomerCareEntity();
+    entity.setCustomer(customer);
+    entity.setStaff(staff);
+    entity.setContent(request.getContent());
+    entity.setStatusAfterCare(request.getStatusAfterCare());
+    entity.setCareDate(new Date());
+
+    customerCareRepository.save(entity);
+
+    if (request.getStatusAfterCare() != null) {
+      customer.setCustomerStatus(request.getStatusAfterCare());
+      customerRepository.save(customer);
     }
   }
 }
