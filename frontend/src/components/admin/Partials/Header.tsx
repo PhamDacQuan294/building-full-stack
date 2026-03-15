@@ -26,7 +26,7 @@ const Header = () => {
           {/* Right */}
           <div className="w-9/12 text-right">
             <Link
-              to="/admin/my-account"
+              to="/admin/profile"
               className="mr-2 inline-flex items-center rounded-md bg-primary px-4 py-1.5 text-sm font-medium text-primary-foreground shadow-sm transition hover:opacity-90"
             >
               My account

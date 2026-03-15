@@ -20,6 +20,7 @@ import TransactionList from "@/pages/admin/Transaction/TransactionList";
 import CreateTransaction from "@/pages/admin/Transaction/CreateTransaction";
 import EditTransaction from "@/pages/admin/Transaction/EditTransaction";
 import DashboardPage from "@/pages/admin/Dashboard";
+import ProfilePage from "@/pages/admin/Profile";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -128,6 +129,10 @@ const routes = [
           {
             path: "transactions/:id/edit",
             element: <EditTransaction />,
+          },
+          {
+            path: "profile",
+            element: <ProfilePage />,
           },
         ],
       },

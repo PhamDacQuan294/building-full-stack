@@ -36,6 +36,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
   @Column(name = "email", length = 120)
   private String email;
 
+  @Column(name = "avatar")
+  private String avatar;
+
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
     name = "user_role",

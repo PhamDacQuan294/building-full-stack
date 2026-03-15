@@ -81,6 +81,9 @@ public class WebSecurityConfig {
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
         .requestMatchers("/api/admin/dashboard").hasAnyRole("ADMIN", "STAFF")
 
+        .requestMatchers("/api/admin/profile/**").hasAnyRole("ADMIN", "STAFF")
+        .requestMatchers("/api/admin/upload/**").hasAnyRole("ADMIN", "STAFF")
+
 //        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
 
         .anyRequest().authenticated()
