@@ -13,7 +13,6 @@ const Sidebar = () => {
     <aside className="border-r w-50 shrink-0 bg-muted text-sidebar-foreground border-border">
       <div className="inner-menu">
         <ul className="p-0 m-0 list-none">
-
           <li>
             <NavLink to="/dashboard" className={linkClass}>
               Tổng quan
@@ -39,9 +38,11 @@ const Sidebar = () => {
           </li>
 
           <li>
-            <NavLink to="/admin/customers">
-              Danh sách khách hàng
-            </NavLink>
+            <NavLink to="/admin/customers">Danh sách khách hàng</NavLink>
+          </li>
+
+          <li>
+            <NavLink to="/admin/transactions">Danh sách giao dịch</NavLink>
           </li>
         </ul>
       </div>

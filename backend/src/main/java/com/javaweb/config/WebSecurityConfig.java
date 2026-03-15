@@ -72,6 +72,12 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.GET, "/api/admin/customers/*/care-history").hasAuthority("CUSTOMER_CARE_VIEW")
         .requestMatchers(HttpMethod.POST, "/api/admin/customers/care-history").hasAuthority("CUSTOMER_CARE_CREATE")
 
+        .requestMatchers(HttpMethod.GET, "/api/admin/transactions/**").hasAuthority("TRANSACTION_VIEW")
+        .requestMatchers(HttpMethod.POST, "/api/admin/transactions/create").hasAuthority("TRANSACTION_CREATE")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/transactions/edit/**").hasAuthority("TRANSACTION_EDIT")
+        .requestMatchers(HttpMethod.DELETE, "/api/admin/transactions/delete/**").hasAuthority("TRANSACTION_DELETE")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/transactions/*/status").hasAuthority("TRANSACTION_EDIT")
+
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
 
 //        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")

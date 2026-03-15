@@ -16,6 +16,9 @@ import CustomerList from "@/pages/admin/Customers/CustomerList";
 import CreateCustomer from "@/pages/admin/Customers/CreateCustomer";
 import EditCustomer from "@/pages/admin/Customers/EditCustomer";
 import CustomerCareHistory from "@/pages/admin/Customers/CustomerCareHistory";
+import TransactionList from "@/pages/admin/Transaction/TransactionList";
+import CreateTransaction from "@/pages/admin/Transaction/CreateTransaction";
+import EditTransaction from "@/pages/admin/Transaction/EditTransaction";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -91,20 +94,32 @@ const routes = [
           },
           {
             path: "customers",
-            element: <CustomerList />
+            element: <CustomerList />,
           },
           {
             path: "customers/create",
-            element: <CreateCustomer />
+            element: <CreateCustomer />,
           },
           {
             path: "customers/:id/edit",
-            element: <EditCustomer />
+            element: <EditCustomer />,
           },
           {
             path: "customers/:id/care-history",
-            element: <CustomerCareHistory />
-          }
+            element: <CustomerCareHistory />,
+          },
+          {
+            path: "transactions",
+            element: <TransactionList />,
+          },
+          {
+            path: "transactions/create",
+            element: <CreateTransaction />,
+          },
+          {
+            path: "transactions/:id/edit",
+            element: <EditTransaction />,
+          },
         ],
       },
     ],

@@ -6,7 +6,10 @@ import java.util.TreeMap;
 public enum TransactionType {
   CSKH("Chăm sóc khách hàng"),
   DAN_XEM("Dẫn xem"),
-  DAT_COC("Đặt cọc");
+  DAT_COC("Đặt cọc"),
+  TU_VAN("Tư vấn"),
+  KY_HOP_DONG("Ký hợp đồng"),
+  DAN_DI_XEM("Dẫn đi xem");
 
   private final String transactionTypeName;
 
