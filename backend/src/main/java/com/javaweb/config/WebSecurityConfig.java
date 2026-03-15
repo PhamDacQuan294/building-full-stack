@@ -79,6 +79,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PUT, "/api/admin/transactions/*/status").hasAuthority("TRANSACTION_EDIT")
 
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
+        .requestMatchers("/api/admin/dashboard").hasAnyRole("ADMIN", "STAFF")
 
 //        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
 

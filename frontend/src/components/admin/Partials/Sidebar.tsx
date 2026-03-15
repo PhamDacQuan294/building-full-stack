@@ -14,7 +14,7 @@ const Sidebar = () => {
       <div className="inner-menu">
         <ul className="p-0 m-0 list-none">
           <li>
-            <NavLink to="/dashboard" className={linkClass}>
+            <NavLink to="/admin/dashboard" className={linkClass}>
               Tổng quan
             </NavLink>
           </li>

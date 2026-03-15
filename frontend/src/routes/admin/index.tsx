@@ -19,6 +19,7 @@ import CustomerCareHistory from "@/pages/admin/Customers/CustomerCareHistory";
 import TransactionList from "@/pages/admin/Transaction/TransactionList";
 import CreateTransaction from "@/pages/admin/Transaction/CreateTransaction";
 import EditTransaction from "@/pages/admin/Transaction/EditTransaction";
+import DashboardPage from "@/pages/admin/Dashboard";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -64,6 +65,14 @@ const routes = [
         path: "/admin",
         element: <LayoutDefault />,
         children: [
+          {
+            index: true,
+            element: <DashboardPage />,
+          },
+          {
+            path: "dashboard",
+            element: <DashboardPage />,
+          },
           {
             path: "buildings/create",
             element: <CreateBuilding />,
