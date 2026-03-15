@@ -50,6 +50,9 @@ public class UserEntity extends BaseEntity implements UserDetails {
   @OneToMany(mappedBy = "staff")
   private Set<CustomerCareEntity> customerCares = new HashSet<>();
 
+  @OneToMany(mappedBy = "actor")
+  private Set<ActivityLogEntity> activityLogs = new HashSet<>();
+
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     List<GrantedAuthority> authorities = new ArrayList<>();

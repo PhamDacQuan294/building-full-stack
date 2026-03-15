@@ -5,6 +5,7 @@ import com.javaweb.model.request.profile.ChangePasswordRequestDTO;
 import com.javaweb.model.request.profile.UpdateProfileRequestDTO;
 import com.javaweb.model.response.profile.ProfileResponseDTO;
 import com.javaweb.repository.admin.UserRepository;
+import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.ProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,6 +21,9 @@ public class ProfileServiceImpl implements ProfileService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private ActivityLogService activityLogService;
 
   @Override
   public ProfileResponseDTO getMyProfile() {
@@ -70,6 +74,13 @@ public class ProfileServiceImpl implements ProfileService {
 
     user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(user);
+
+    activityLogService.save(
+      "RESET_PASSWORD",
+      "PROFILE",
+      "Đổi mật khẩu tài khoản",
+      user.getId()
+    );
   }
 
   private UserEntity getCurrentUser() {

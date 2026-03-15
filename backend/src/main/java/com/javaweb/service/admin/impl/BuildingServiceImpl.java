@@ -17,6 +17,7 @@ import com.javaweb.repository.admin.AssignmentBuildingRepository;
 import com.javaweb.repository.admin.BuildingRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.repository.admin.custom.BuildingRepositoryCustom;
+import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.BuildingService;
 import com.javaweb.service.admin.UploadService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,9 @@ public class BuildingServiceImpl implements BuildingService {
 
   @Autowired
   private UploadService uploadService;
+
+  @Autowired
+  private ActivityLogService activityLogService;
 
   @Override
   public List<BuildingResponseDTO> findAll(BuildingSearchRequestDTO params, Pageable pageable) {
@@ -191,6 +195,13 @@ public class BuildingServiceImpl implements BuildingService {
     }
 
     buildingRepository.save(building);
+
+    activityLogService.save(
+      "UPDATE",
+      "BUILDING",
+      "Cập nhật tòa nhà: " + building.getName(),
+      building.getId()
+    );
   }
 
   @Override
@@ -207,5 +218,12 @@ public class BuildingServiceImpl implements BuildingService {
       .orElseThrow(() -> new RuntimeException("Không tìm thấy toà nhà"));
 
     buildingRepository.delete(building);
+
+    activityLogService.save(
+      "DELETE",
+      "BUILDING",
+      "Xóa tòa nhà: " + building.getName(),
+      building.getId()
+    );
   }
 }

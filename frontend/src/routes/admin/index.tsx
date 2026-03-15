@@ -21,6 +21,7 @@ import CreateTransaction from "@/pages/admin/Transaction/CreateTransaction";
 import EditTransaction from "@/pages/admin/Transaction/EditTransaction";
 import DashboardPage from "@/pages/admin/Dashboard";
 import ProfilePage from "@/pages/admin/Profile";
+import ActivityLogListPage from "@/pages/admin/ActivityLogs";
 // import Profile from "@/pages/admin/Profile";
 // import Login from "@/pages/Login";
 // import ProtectedRoute from "@/components/ProtectedRoute";
@@ -133,6 +134,10 @@ const routes = [
           {
             path: "profile",
             element: <ProfilePage />,
+          },
+          {
+            path: "activity-logs",
+            element: <ActivityLogListPage />,
           },
         ],
       },

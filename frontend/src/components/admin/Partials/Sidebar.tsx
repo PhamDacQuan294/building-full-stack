@@ -44,6 +44,22 @@ const Sidebar = () => {
           <li>
             <NavLink to="/admin/transactions">Danh sách giao dịch</NavLink>
           </li>
+
+          <li>
+            <NavLink
+              to="/admin/activity-logs"
+              className={({ isActive }) =>
+                `block border-b border-sidebar-border px-[10px] py-[6px] transition 
+                ${
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "hover:bg-sidebar-accent/60"
+                }`
+              }
+            >
+              Nhật ký hoạt động
+            </NavLink>
+          </li>
         </ul>
       </div>
     </aside>

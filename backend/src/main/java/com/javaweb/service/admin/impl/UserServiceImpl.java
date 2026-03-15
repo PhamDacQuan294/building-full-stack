@@ -9,6 +9,7 @@ import com.javaweb.model.request.user.CreateUserRequestDTO;
 import com.javaweb.model.response.user.UserItemResponseDTO;
 import com.javaweb.repository.admin.RoleRepository;
 import com.javaweb.repository.admin.UserRepository;
+import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements IUserService {
 
   @Autowired
   private RoleRepository roleRepository;
+
+  @Autowired
+  private ActivityLogService activityLogService;
 
   @Override
   public Map<Long, String> getStaffs() {
@@ -149,5 +153,12 @@ public class UserServiceImpl implements IUserService {
     user.setRoles(roles);
 
     userRepository.save(user);
+
+    activityLogService.save(
+      "CREATE",
+      "USER",
+      "Tạo người dùng mới: " + user.getEmail(),
+      user.getId()
+    );
   }
 }

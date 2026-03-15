@@ -22,6 +22,7 @@ import com.javaweb.repository.admin.CustomerCareRepository;
 import com.javaweb.repository.admin.CustomerRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.repository.admin.custom.CustomerRepositoryCustom;
+import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -55,6 +56,9 @@ public class CustomerServiceImpl implements CustomerService {
   @Autowired
   private CustomerCareRepository customerCareRepository;
 
+  @Autowired
+  private ActivityLogService activityLogService;
+
   @Override
   public List<CustomerResponseDTO> findAll(CustomerSearchRequestDTO request) {
     List<CustomerEntity> customers = customerRepositoryCustom.findAll(request);
@@ -81,6 +85,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     customerRepository.save(customer);
+
+    activityLogService.save(
+      "CREATE",
+      "CUSTOMER",
+      "Tạo khách hàng mới: " + customer.getFullname(),
+      customer.getId()
+    );
   }
 
   @Override
@@ -90,6 +101,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     customerDTOConverter.updateCustomerEntity(request, customer);
     customerRepository.save(customer);
+
+    activityLogService.save(
+      "UPDATE",
+      "CUSTOMER",
+      "Cập nhật khách hàng: " + customer.getFullname(),
+      customer.getId()
+    );
   }
 
   @Override
@@ -98,6 +116,13 @@ public class CustomerServiceImpl implements CustomerService {
       .orElseThrow(() -> new RuntimeException("Không tìm thấy khách hàng"));
 
     customerRepository.delete(customer);
+
+    activityLogService.save(
+      "DELETE",
+      "CUSTOMER",
+      "Xóa khách hàng: " + customer.getFullname(),
+      customer.getId()
+    );
   }
 
   @Override

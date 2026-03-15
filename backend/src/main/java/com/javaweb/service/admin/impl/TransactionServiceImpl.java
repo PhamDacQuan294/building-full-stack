@@ -12,6 +12,7 @@ import com.javaweb.model.response.transaction.TransactionResponseDTO;
 import com.javaweb.repository.admin.CustomerRepository;
 import com.javaweb.repository.admin.TransactionRepository;
 import com.javaweb.repository.admin.UserRepository;
+import com.javaweb.service.admin.ActivityLogService;
 import com.javaweb.service.admin.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,9 @@ public class TransactionServiceImpl implements TransactionService {
 
   @Autowired
   private TransactionDTOConverter transactionDTOConverter;
+
+  @Autowired
+  private ActivityLogService activityLogService;
 
   @Override
   public List<TransactionResponseDTO> findAll(TransactionSearchRequestDTO request) {
@@ -80,6 +84,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     transactionRepository.save(entity);
+
+    activityLogService.save(
+      "CREATE",
+      "TRANSACTION",
+      "Tạo giao dịch mới",
+      entity.getId()
+    );
   }
 
   @Override
@@ -109,6 +120,13 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     transactionRepository.save(entity);
+
+    activityLogService.save(
+      "UPDATE",
+      "TRANSACTION",
+      "Cập nhật giao dịch",
+      entity.getId()
+    );
   }
 
   @Override
@@ -117,6 +135,13 @@ public class TransactionServiceImpl implements TransactionService {
       .orElseThrow(() -> new RuntimeException("Không tìm thấy giao dịch"));
 
     transactionRepository.delete(entity);
+
+    activityLogService.save(
+      "DELETE",
+      "TRANSACTION",
+      "Xóa giao dịch",
+      entity.getId()
+    );
   }
 
   @Override
