@@ -38,6 +38,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/forgot").permitAll()
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/verify-otp").permitAll()
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/reset").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/client/home/**").permitAll()
 
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings").hasAuthority("BUILDING_VIEW")
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings/detail/**").hasAuthority("BUILDING_VIEW")
@@ -53,11 +54,6 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.PATCH, "/api/admin/buildings/change-multi").hasAuthority("BUILDING_EDIT")
 
         .requestMatchers(HttpMethod.DELETE, "/api/admin/buildings/delete/**").hasAuthority("BUILDING_DELETE")
-
-//        .requestMatchers(apiPrefix + "/admin/buildings/**").hasRole("ADMIN")
-//        .requestMatchers(apiPrefix + "/admin/roles/**").hasRole("ADMIN")
-//        .requestMatchers("/api/admin/users/create").hasRole("ADMIN")
-//        .requestMatchers("/api/admin/users/**").hasRole("ADMIN")
 
         .requestMatchers(HttpMethod.GET, "/api/admin/users/**").hasAuthority("USER_VIEW")
         .requestMatchers(HttpMethod.POST, "/api/admin/users/create").hasAuthority("USER_CREATE")
@@ -91,7 +87,6 @@ public class WebSecurityConfig {
         .requestMatchers("/api/admin/upload/**").hasAnyRole("ADMIN", "STAFF")
         .requestMatchers("/api/admin/activity-logs/**").hasAnyRole("ADMIN", "STAFF")
         .requestMatchers("/api/admin/mails/**").hasAnyRole("ADMIN", "STAFF")
-//        .requestMatchers(apiPrefix + "/admin/users/**").hasAnyRole("ADMIN", "STAFF")
 
         .anyRequest().authenticated()
       );
