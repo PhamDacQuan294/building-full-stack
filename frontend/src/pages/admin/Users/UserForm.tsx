@@ -1,56 +1,71 @@
 import { useState } from "react";
-import type { CreateUserPayload } from "@/types/admin/users";
+import { Button } from "@/components/ui/button";
 
-type RoleOption = {
+type RoleItem = {
   id: number;
   name: string;
 };
 
-type UserFormProps = {
-  roles: RoleOption[];
-  onSubmit: (values: CreateUserPayload) => Promise<void>;
-  loading?: boolean;
+type UserFormValues = {
+  fullName: string;
+  email: string;
+  phone: string;
+  username: string;
+  password?: string;
+  avatar: string;
+  roleIds: number[];
 };
 
-const defaultValues: CreateUserPayload = {
-  userName: "",
+type Props = {
+  initialValues?: UserFormValues;
+  roles: RoleItem[];
+  loading?: boolean;
+  submitText?: string;
+  showPassword?: boolean;
+  onSubmit: (values: UserFormValues) => Promise<void>;
+};
+
+const defaultValues: UserFormValues = {
   fullName: "",
   email: "",
   phone: "",
+  username: "",
   password: "",
-  status: "ACTIVE",
+  avatar: "",
   roleIds: [],
 };
 
 export default function UserForm({
+  initialValues,
   roles,
-  onSubmit,
   loading = false,
-}: UserFormProps) {
-  const [form, setForm] = useState<CreateUserPayload>(defaultValues);
+  submitText = "Lưu",
+  showPassword = false,
+  onSubmit,
+}: Props) {
+  const [form, setForm] = useState<UserFormValues>({
+    ...defaultValues,
+    ...initialValues,
+  });
 
-  const handleChange = (
-    key: keyof CreateUserPayload,
-    value: string | number[],
-  ) => {
+  const handleChange = (key: keyof UserFormValues, value: string) => {
     setForm((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
 
-  const handleRoleChange = (roleId: number, checked: boolean) => {
-    if (checked) {
-      setForm((prev) => ({
+  const handleRoleChange = (roleId: number) => {
+    setForm((prev) => {
+      const exists = prev.roleIds.includes(roleId);
+
+      return {
         ...prev,
-        roleIds: [...prev.roleIds, roleId],
-      }));
-    } else {
-      setForm((prev) => ({
-        ...prev,
-        roleIds: prev.roleIds.filter((id) => id !== roleId),
-      }));
-    }
+        roleIds: exists
+          ? prev.roleIds.filter((id) => id !== roleId)
+          : [...prev.roleIds, roleId],
+      };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,95 +74,69 @@ export default function UserForm({
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-5">
-      <div>
-        <label>Tên đăng nhập</label>
-        <input
-          value={form.userName}
-          onChange={(e) => handleChange("userName", e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Nhập tên đăng nhập"
-        />
-      </div>
-      
-      <div>
-        <label>Họ tên</label>
-        <input
-          value={form.fullName}
-          onChange={(e) => handleChange("fullName", e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Nhập họ tên"
-        />
-      </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        value={form.fullName}
+        onChange={(e) => handleChange("fullName", e.target.value)}
+        placeholder="Họ tên"
+        className="w-full p-3 border rounded-xl"
+      />
 
-      <div>
-        <label>Email</label>
-        <input
-          value={form.email}
-          onChange={(e) => handleChange("email", e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Nhập email"
-        />
-      </div>
+      <input
+        value={form.email}
+        onChange={(e) => handleChange("email", e.target.value)}
+        placeholder="Email"
+        className="w-full p-3 border rounded-xl"
+      />
 
-      <div>
-        <label>Số điện thoại</label>
-        <input
-          value={form.phone}
-          onChange={(e) => handleChange("phone", e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Nhập số điện thoại"
-        />
-      </div>
+      <input
+        value={form.phone}
+        onChange={(e) => handleChange("phone", e.target.value)}
+        placeholder="Số điện thoại"
+        className="w-full p-3 border rounded-xl"
+      />
 
-      <div>
-        <label>Mật khẩu</label>
+      <input
+        value={form.username}
+        onChange={(e) => handleChange("username", e.target.value)}
+        placeholder="Username"
+        className="w-full p-3 border rounded-xl"
+      />
+
+      {showPassword && (
         <input
           type="password"
-          value={form.password}
+          value={form.password ?? ""}
           onChange={(e) => handleChange("password", e.target.value)}
-          className="w-full px-3 py-2 border rounded"
-          placeholder="Nhập mật khẩu"
+          placeholder="Mật khẩu"
+          className="w-full p-3 border rounded-xl"
         />
+      )}
+
+      <input
+        value={form.avatar}
+        onChange={(e) => handleChange("avatar", e.target.value)}
+        placeholder="Avatar URL"
+        className="w-full p-3 border rounded-xl"
+      />
+
+      <div className="space-y-2">
+        <div className="font-medium">Nhóm quyền</div>
+        {roles.map((role) => (
+          <label key={role.id} className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              checked={form.roleIds.includes(role.id)}
+              onChange={() => handleRoleChange(role.id)}
+            />
+            <span>{role.name}</span>
+          </label>
+        ))}
       </div>
 
-      <div>
-        <label>Trạng thái</label>
-        <select
-          value={form.status}
-          onChange={(e) =>
-            handleChange("status", e.target.value as "ACTIVE" | "INACTIVE")
-          }
-          className="w-full px-3 py-2 border rounded"
-        >
-          <option value="ACTIVE">Hoạt động</option>
-          <option value="INACTIVE">Ngưng hoạt động</option>
-        </select>
-      </div>
-
-      <div>
-        <label>Nhóm quyền</label>
-        <div className="space-y-2">
-          {roles.map((role) => (
-            <label key={role.id} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={form.roleIds.includes(role.id)}
-                onChange={(e) => handleRoleChange(role.id, e.target.checked)}
-              />
-              {role.name}
-            </label>
-          ))}
-        </div>
-      </div>
-
-      <button
-        type="submit"
-        disabled={loading}
-        className="px-4 py-2 text-white rounded bg-violet-600"
-      >
-        {loading ? "Đang lưu..." : "Thêm người dùng"}
-      </button>
+      <Button type="submit" disabled={loading}>
+        {loading ? "Đang lưu..." : submitText}
+      </Button>
     </form>
   );
 }

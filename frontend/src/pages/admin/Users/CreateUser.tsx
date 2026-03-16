@@ -1,54 +1,51 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import UserForm from "./UserForm";
 import { userService } from "@/services/admin/userService";
-import { roleService } from "@/services/admin/roleService";
-import type { CreateUserPayload } from "@/types/admin/users";
+import UserForm from "./UserForm";
+import { toast } from "sonner";
 
-type RoleOption = {
+type RoleItem = {
   id: number;
   name: string;
 };
 
 export default function CreateUser() {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [roles, setRoles] = useState<RoleOption[]>([]);
+  const [roles, setRoles] = useState<RoleItem[]>([]);
 
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await roleService.getRoles();
+        const res = await userService.getRoles();
         setRoles(res.data || []);
       } catch (error) {
         console.error(error);
-        toast.error("Không tải được danh sách nhóm quyền");
       }
     };
 
     fetchRoles();
   }, []);
 
-  const handleCreate = async (values: CreateUserPayload) => {
+  const handleSubmit = async (values: any) => {
     try {
-      setLoading(true);
-      await userService.createUser(values);
-
-      toast.success("Thêm người dùng thành công");
+      await userService.create(values);
+      toast.success("Tạo user thành công");
       navigate("/admin/users");
     } catch (error) {
       console.error(error);
-      toast.error("Thêm người dùng thất bại");
-    } finally {
-      setLoading(false);
+      toast.error("Tạo user thất bại");
     }
   };
 
   return (
-    <div className="p-6 bg-white border rounded-xl border-border">
-      <h1 className="mb-6 text-xl font-semibold">Thêm người dùng</h1>
-      <UserForm roles={roles} onSubmit={handleCreate} loading={loading} />
+    <div className="space-y-4">
+      <h1 className="text-2xl font-bold">Thêm người dùng</h1>
+      <UserForm
+        roles={roles}
+        showPassword
+        submitText="Tạo mới"
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }

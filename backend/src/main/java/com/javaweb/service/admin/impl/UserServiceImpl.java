@@ -7,7 +7,7 @@ import com.javaweb.entity.UserEntity;
 import com.javaweb.enums.CommonStatus;
 import com.javaweb.model.request.notification.NewUserMailRequestDTO;
 import com.javaweb.model.request.user.CreateUserRequestDTO;
-import com.javaweb.model.response.user.UserItemResponseDTO;
+import com.javaweb.model.response.user.UserResponseDTO;
 import com.javaweb.repository.admin.RoleRepository;
 import com.javaweb.repository.admin.UserRepository;
 import com.javaweb.service.admin.ActivityLogService;
@@ -18,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -84,12 +82,12 @@ public class UserServiceImpl implements IUserService {
   }
 
   @Override
-  public List<UserItemResponseDTO> getUsers() {
+  public List<UserResponseDTO> getUsers() {
     List<UserEntity> users = userRepository.findAll();
-    List<UserItemResponseDTO> result = new ArrayList<>();
+    List<UserResponseDTO> result = new ArrayList<>();
 
     for (UserEntity item : users) {
-      UserItemResponseDTO dto = new UserItemResponseDTO();
+      UserResponseDTO dto = new UserResponseDTO();
       dto.setId(item.getId());
       dto.setFullName(item.getFullname());
       dto.setEmail(item.getEmail());

@@ -3,7 +3,7 @@ package com.javaweb.api.admin;
 import com.javaweb.model.request.auth.LoginRequestDTO;
 import com.javaweb.model.request.user.CreateUserRequestDTO;
 import com.javaweb.model.response.ResponseDTO;
-import com.javaweb.model.response.user.UserItemResponseDTO;
+import com.javaweb.model.response.user.UserResponseDTO;
 import com.javaweb.service.admin.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,18 @@ public class UserAPI {
   private IUserService userService;
 
   @GetMapping("")
-  public ResponseEntity<ResponseDTO<List<UserItemResponseDTO>>> getUsers() {
+  public ResponseEntity<ResponseDTO<List<UserResponseDTO>>> getUsers() {
     try {
-      List<UserItemResponseDTO> users = userService.getUsers();
+      List<UserResponseDTO> users = userService.getUsers();
 
-      ResponseDTO<List<UserItemResponseDTO>> response = new ResponseDTO<>();
+      ResponseDTO<List<UserResponseDTO>> response = new ResponseDTO<>();
       response.setData(users);
       response.setMessage("success");
       response.setDetail("Lấy danh sách người dùng thành công");
 
       return ResponseEntity.ok(response);
     } catch (Exception e) {
-      ResponseDTO<List<UserItemResponseDTO>> response = new ResponseDTO<>();
+      ResponseDTO<List<UserResponseDTO>> response = new ResponseDTO<>();
       response.setData(null);
       response.setMessage("failed");
       response.setDetail(e.getMessage());

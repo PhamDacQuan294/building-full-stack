@@ -78,6 +78,12 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.DELETE, "/api/admin/transactions/delete/**").hasAuthority("TRANSACTION_DELETE")
         .requestMatchers(HttpMethod.PUT, "/api/admin/transactions/*/status").hasAuthority("TRANSACTION_EDIT")
 
+        .requestMatchers(HttpMethod.GET, "/api/admin/users2/**").hasAuthority("USER_VIEW")
+        .requestMatchers(HttpMethod.POST, "/api/admin/users2/create").hasAuthority("USER_CREATE")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/users2/edit/**").hasAuthority("USER_EDIT")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/users2/*/status").hasAuthority("USER_EDIT")
+        .requestMatchers(HttpMethod.PUT, "/api/admin/users2/*/reset-password").hasAuthority("USER_EDIT")
+
         .requestMatchers("/api/admin/roles/**").hasRole("ADMIN")
         .requestMatchers("/api/admin/dashboard").hasAnyRole("ADMIN", "STAFF")
 
