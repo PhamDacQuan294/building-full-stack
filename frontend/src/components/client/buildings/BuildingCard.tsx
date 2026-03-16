@@ -1,5 +1,6 @@
 import type { ClientBuildingCard } from "@/types/client/home";
 import { Link } from "react-router-dom";
+import FavoriteButton from "../favorite/FavoriteButton";
 
 type Props = {
   item: ClientBuildingCard;
@@ -40,6 +41,7 @@ export default function BuildingCard({ item }: Props) {
           <span className="font-bold text-violet-600">
             {formatVND(item.rentPrice)}
           </span>
+          <FavoriteButton buildingId={item.id} />
         </div>
 
         <Link to={`/buildings/${item.id}`}>

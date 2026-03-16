@@ -27,6 +27,9 @@ public class CustomerEntity extends BaseEntity {
   @Column(name = "email", length = 120)
   private String email;
 
+  @Column(name = "password", length = 255)
+  private String password;
+
   @Column(name = "companyname")
   private String companyName;
 

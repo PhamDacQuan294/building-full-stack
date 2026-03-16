@@ -94,7 +94,7 @@ public class WebSecurityConfig {
         .requestMatchers("/api/admin/upload/**").hasAnyRole("ADMIN", "STAFF")
         .requestMatchers("/api/admin/activity-logs/**").hasAnyRole("ADMIN", "STAFF")
         .requestMatchers("/api/admin/mails/**").hasAnyRole("ADMIN", "STAFF")
-
+        .requestMatchers("/api/client/favorites/**").authenticated()
         .anyRequest().authenticated()
       );
 

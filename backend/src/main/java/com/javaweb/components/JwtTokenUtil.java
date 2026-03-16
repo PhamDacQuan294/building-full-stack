@@ -1,5 +1,6 @@
 package com.javaweb.components;
 
+import com.javaweb.entity.CustomerEntity;
 import com.javaweb.entity.UserEntity;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -53,6 +54,16 @@ public class JwtTokenUtil {
       .setSubject(user.getEmail())
       .setIssuedAt(new Date())
       .setExpiration(new Date(System.currentTimeMillis() + expiration * 1000L))
+      .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+      .compact();
+  }
+
+  public String generateCustomerToken(CustomerEntity customer) {
+    return Jwts.builder()
+      .setSubject(customer.getEmail())
+      .claim("type", "CLIENT")
+      .claim("customerId", customer.getId())
+      .claim("email", customer.getEmail())
       .signWith(getSignInKey(), SignatureAlgorithm.HS256)
       .compact();
   }

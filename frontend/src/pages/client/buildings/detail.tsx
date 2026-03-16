@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useBuildingDetailStore } from "@/stores/client/useBuildingDetailStore";
 import ContactRequestForm from "@/components/client/contact/ContactRequestForm";
+import FavoriteButton from "@/components/client/favorite/FavoriteButton";
 
 function formatVND(value?: number) {
   if (!value || value <= 0) return "Liên hệ";
@@ -96,6 +97,8 @@ export default function ClientBuildingDetailPage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
+              <FavoriteButton buildingId={item.id} />
+
               <button className="px-5 py-3 font-medium text-white cursor-pointer rounded-2xl bg-violet-600 hover:bg-violet-700">
                 Liên hệ ngay
               </button>

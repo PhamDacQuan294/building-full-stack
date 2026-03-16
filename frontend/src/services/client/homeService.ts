@@ -1,5 +1,4 @@
-// import apiClient from "@/lib/axiosClient";
-import apiClient from "@/lib/apiClient";
+import apiClient from "@/lib/axiosClient";
 import type { HomeSearchFilters } from "@/types/client/home";
 
 export const homeService = {
