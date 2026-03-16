@@ -1,9 +1,17 @@
-import ClientHomePage from "@/pages/client/home";
+import buildingRoutes from "./buildings.route";
+import homeRoutes from "./home.route";
 
 const clientRoutes = [
-  {
-    path: "/",
-    element: <ClientHomePage />,
+   {
+    children: [
+      {
+        path: "/",
+        children: [
+          ...homeRoutes,
+          ...buildingRoutes,
+        ],
+      },
+    ],
   },
 ];
 

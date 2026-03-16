@@ -39,6 +39,7 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/verify-otp").permitAll()
         .requestMatchers(HttpMethod.POST, apiPrefix + "/admin/password/reset").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/client/home/**").permitAll()
+        .requestMatchers(HttpMethod.GET, "/api/client/buildings/**").permitAll()
 
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings").hasAuthority("BUILDING_VIEW")
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings/detail/**").hasAuthority("BUILDING_VIEW")

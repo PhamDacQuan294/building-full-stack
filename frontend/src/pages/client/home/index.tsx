@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useHomeStore } from "@/stores/client/useHomeStore";
 import HomeSearchBox from "@/components/client/home/HomeSearchBox";
 import BuildingCard from "@/components/client/buildings/BuildingCard";
+import { Link } from "react-router-dom";
 
 export default function ClientHomePage() {
   const {
@@ -87,12 +88,21 @@ export default function ClientHomePage() {
               <BuildingCard key={item.id} item={item} />
             ))}
           </div>
+
+          <Link
+            to="/buildings"
+            className="inline-flex px-4 py-2 text-sm font-medium border rounded-2xl border-violet-200 text-violet-700 hover:bg-violet-50"
+          >
+            Xem tất cả
+          </Link>
         </section>
 
         {/* DISTRICTS */}
         <section className="space-y-6">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">Khu vực nổi bật</h2>
+            <h2 className="text-2xl font-bold text-slate-900">
+              Khu vực nổi bật
+            </h2>
             <p className="mt-1 text-sm text-slate-500">
               Các quận/huyện có nhiều bất động sản đáng chú ý
             </p>
