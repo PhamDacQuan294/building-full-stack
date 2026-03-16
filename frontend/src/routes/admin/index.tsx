@@ -9,6 +9,7 @@ import userRoutes from "./user.routes";
 import customerRoutes from "./customer.routes";
 import transactionRoutes from "./transaction.routes";
 import systemRoutes from "./system.routes";
+import contactRoutes from "./contact.routes";
 
 const routes = [
   ...authRoutes,
@@ -37,6 +38,7 @@ const routes = [
           ...userRoutes,
           ...customerRoutes,
           ...transactionRoutes,
+          ...contactRoutes,
         ],
       },
     ],

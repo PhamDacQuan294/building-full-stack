@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useBuildingDetailStore } from "@/stores/client/useBuildingDetailStore";
+import ContactRequestForm from "@/components/client/contact/ContactRequestForm";
 
 function formatVND(value?: number) {
   if (!value || value <= 0) return "Liên hệ";
@@ -31,7 +32,10 @@ export default function ClientBuildingDetailPage() {
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
           <div className="overflow-hidden bg-white shadow-sm rounded-3xl">
             <img
-              src={item.imageUrl || "https://via.placeholder.com/900x600?text=Building"}
+              src={
+                item.imageUrl ||
+                "https://via.placeholder.com/900x600?text=Building"
+              }
               alt={item.name}
               className="h-full max-h-[500px] w-full object-cover"
             />
@@ -76,12 +80,15 @@ export default function ClientBuildingDetailPage() {
             <div>
               <h2 className="text-xl font-bold text-slate-900">Mô tả</h2>
               <p className="mt-2 leading-7 text-slate-600">
-                {item.description || "Chưa có mô tả chi tiết cho bất động sản này."}
+                {item.description ||
+                  "Chưa có mô tả chi tiết cho bất động sản này."}
               </p>
             </div>
 
             <div className="p-4 border rounded-2xl border-slate-200">
-              <h2 className="text-lg font-bold text-slate-900">Thông tin tư vấn</h2>
+              <h2 className="text-lg font-bold text-slate-900">
+                Thông tin tư vấn
+              </h2>
               <div className="mt-3 space-y-2 text-sm text-slate-600">
                 <div>Người quản lý: {item.managerName || "Đang cập nhật"}</div>
                 <div>Số điện thoại: {item.managerPhone || "Đang cập nhật"}</div>
@@ -102,6 +109,10 @@ export default function ClientBuildingDetailPage() {
               </button>
             </div>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <ContactRequestForm buildingId={item.id} buildingName={item.name} />
         </div>
       </div>
     </div>

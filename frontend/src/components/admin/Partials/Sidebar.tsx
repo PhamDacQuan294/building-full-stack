@@ -92,6 +92,22 @@ const Sidebar = () => {
               Lịch sử email
             </NavLink>
           </li>
+          
+           <li>
+            <NavLink
+              to="/admin/contact-requests"
+              className={({ isActive }) =>
+                `block border-b border-sidebar-border px-[10px] py-[6px] transition 
+                ${
+                  isActive
+                    ? "bg-sidebar-accent text-sidebar-accent-foreground font-medium"
+                    : "hover:bg-sidebar-accent/60"
+                }`
+              }
+            >
+              Yêu cầu liên hệ
+            </NavLink>
+          </li>
         </ul>
       </div>
     </aside>
