@@ -4,7 +4,7 @@ import com.javaweb.converter.AdminContactRequestConverter;
 import com.javaweb.entity.ContactRequestEntity;
 import com.javaweb.model.request.contact.AdminContactRequestUpdateStatusDTO;
 import com.javaweb.model.response.contact.AdminContactRequestListItemDTO;
-import com.javaweb.repository.ContactRequestRepository;
+import com.javaweb.repository.client.ContactRequestRepository;
 import com.javaweb.service.admin.AdminContactRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

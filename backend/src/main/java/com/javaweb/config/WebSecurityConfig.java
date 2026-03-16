@@ -42,6 +42,11 @@ public class WebSecurityConfig {
         .requestMatchers(HttpMethod.GET, "/api/client/buildings/**").permitAll()
         .requestMatchers(HttpMethod.POST, "/api/client/contact-requests").permitAll()
 
+        .requestMatchers(HttpMethod.POST, "/api/client/auth/register").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/client/auth/login").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/client/auth/forgot-password").permitAll()
+        .requestMatchers(HttpMethod.POST, "/api/client/auth/reset-password").permitAll()
+
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings").hasAuthority("BUILDING_VIEW")
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings/detail/**").hasAuthority("BUILDING_VIEW")
         .requestMatchers(HttpMethod.GET, "/api/admin/buildings/*/staffs").hasAuthority("BUILDING_VIEW")

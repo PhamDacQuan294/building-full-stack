@@ -1,4 +1,4 @@
-package com.javaweb.repository;
+package com.javaweb.repository.client;
 
 import com.javaweb.entity.ContactRequestEntity;
 import org.springframework.data.jpa.repository.JpaRepository;

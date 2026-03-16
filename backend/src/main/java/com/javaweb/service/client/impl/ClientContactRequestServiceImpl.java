@@ -5,7 +5,7 @@ import com.javaweb.entity.BuildingEntity;
 import com.javaweb.entity.ContactRequestEntity;
 import com.javaweb.model.client.request.contact.ClientContactRequestCreateDTO;
 import com.javaweb.model.client.response.contact.ClientContactRequestDTO;
-import com.javaweb.repository.ContactRequestRepository;
+import com.javaweb.repository.client.ContactRequestRepository;
 import com.javaweb.repository.client.ClientBuildingRepository;
 import com.javaweb.service.client.ClientContactRequestService;
 import org.springframework.beans.factory.annotation.Autowired;
